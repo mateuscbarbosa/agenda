@@ -19,11 +19,6 @@ public class UserFormDto {
 	public UserFormDto() {
 	}
 
-	public UserFormDto(String email, String name) {
-		this.name = name;
-		this.email = email;
-	}
-
 	public UserFormDto(String email, String name,Integer[] profiles) {
 		this.email = email;
 		this.name = name;

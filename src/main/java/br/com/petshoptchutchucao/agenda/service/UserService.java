@@ -49,7 +49,7 @@ public class UserService {
 		for (int i = 0;  i < userForm.getProfiles().length; i++) {
 			Profile profile = profileRepository.getById(userForm.getProfiles()[i])
 												.orElseThrow(() -> new MongoException("Perfil não encontrado"));
-			System.out.println(profile.getDescription());
+												
 			profiles.add(profile);
 		}
 		user.setProfiles(profiles);

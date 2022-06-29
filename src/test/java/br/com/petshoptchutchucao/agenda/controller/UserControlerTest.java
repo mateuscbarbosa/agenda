@@ -41,8 +41,23 @@ public class UserControlerTest {
 	}
 	
 	@Test
+	void couldNotRegisterUserWithWrongProfiles() throws Exception {
+		Integer profiles[] = {18,28};
+		UserFormDto newUser = new UserFormDto("teste@teste.com.br","Teste", profiles);
+		
+		String json = objectMapper.writeValueAsString(newUser);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.post("/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+			.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+	}
+	
+	@Test
 	void couldRegisterUserWithCompleteData() throws Exception {
-		UserFormDto newUser = new UserFormDto("teste@teste.com.br","Teste");
+		Integer profiles[] = {10,11,12};
+		UserFormDto newUser = new UserFormDto("teste@teste.com.br","Teste",profiles);
 		
 		String json = objectMapper.writeValueAsString(newUser);
 		String jsonWanted = "{\"email\": \"teste@teste.com.br\", \"name\": \"Teste\"}";
