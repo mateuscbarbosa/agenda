@@ -34,6 +34,10 @@ public class User {
 		this.status = status;
 	}
 
+	public void addProfile(Profile profile) {
+		this.profiles.add(profile);
+	}
+	
 	public String getId() {
 		return id;
 	}

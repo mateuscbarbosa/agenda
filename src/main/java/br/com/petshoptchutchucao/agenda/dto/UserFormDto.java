@@ -2,6 +2,7 @@ package br.com.petshoptchutchucao.agenda.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 public class UserFormDto {
 
@@ -11,6 +12,9 @@ public class UserFormDto {
 	
 	@NotBlank
 	private String name;
+	
+	@NotEmpty
+	private Integer profiles[];
 		
 	public UserFormDto() {
 	}
@@ -18,6 +22,12 @@ public class UserFormDto {
 	public UserFormDto(String email, String name) {
 		this.name = name;
 		this.email = email;
+	}
+
+	public UserFormDto(String email, String name,Integer[] profiles) {
+		this.email = email;
+		this.name = name;
+		this.profiles = profiles;
 	}
 
 	public String getName() {
@@ -34,6 +44,14 @@ public class UserFormDto {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Integer[] getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(Integer[] profiles) {
+		this.profiles = profiles;
 	}
 	
 }
