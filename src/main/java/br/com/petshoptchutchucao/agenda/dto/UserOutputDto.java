@@ -3,12 +3,12 @@ package br.com.petshoptchutchucao.agenda.dto;
 public class UserOutputDto {
 
 	private String id;
-	private String name;
 	private String email;
+	private String name;
 	
 	public UserOutputDto() {}
 
-	public UserOutputDto(String id, String name, String email) {
+	public UserOutputDto(String id, String email,  String name) {
 		this.id = id;
 		this.name = name;
 		this.email = email;

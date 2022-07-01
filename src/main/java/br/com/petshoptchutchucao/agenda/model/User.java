@@ -25,6 +25,12 @@ public class User {
 		this.name = name;
 	}
 
+	public User(String email, String name, List<Profile> profiles) {
+		this.email = email;
+		this.name = name;
+		this.profiles = profiles;
+	}
+
 	public User(String id, String email, String password, String name, List<Profile> profiles, Status status) {
 		this.id = id;
 		this.email = email;
