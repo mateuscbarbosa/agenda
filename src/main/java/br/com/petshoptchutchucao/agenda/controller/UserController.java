@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.service.UserService;
 
 @RestController
@@ -37,5 +39,12 @@ public class UserController {
 		
 		URI uri = uriBuilder.path("/users/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
+	}
+	
+	@PutMapping
+	public ResponseEntity<UserOutputDto> update(@RequestBody @Valid UserUpdateFormDto userForm){
+		UserOutputDto userOutput = service.update(userForm);
+		
+		return ResponseEntity.ok(userOutput);
 	}
 }

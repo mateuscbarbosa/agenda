@@ -39,6 +39,14 @@ public class User {
 		this.profiles = profiles;
 		this.status = status;
 	}
+	
+	public void updateInfo(String email, String name, String password, List<Profile> profiles, Status status) {
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.profiles = profiles;
+		this.status = status;
+	}
 
 	public void addProfile(Profile profile) {
 		this.profiles.add(profile);
@@ -91,6 +99,5 @@ public class User {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	
 	
 }
