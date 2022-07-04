@@ -20,6 +20,7 @@ import com.mongodb.MongoException;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
 import br.com.petshoptchutchucao.agenda.model.Profile;
+import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.User;
 import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
@@ -48,7 +49,7 @@ public class UserServiceTest {
 		
 		UserFormDto userForm = new UserFormDto("","",profilesVetor);
 
-		User user = new User(userForm.getEmail(), userForm.getName(), profilesList);
+		User user = new User(userForm.getEmail(), userForm.getName(), profilesList, Status.ATIVO);
 
 		Mockito.when(modelMapper.map(userForm, User.class)).thenReturn(user);
 
@@ -66,7 +67,7 @@ public class UserServiceTest {
 		
 		Mockito.when(profileRepository.getById(profilesVetor[0])).thenReturn(Optional.of(profile));
 		
-		User user = new User(userForm.getEmail(),userForm.getName(),profilesList);
+		User user = new User(userForm.getEmail(),userForm.getName(),profilesList, Status.ATIVO);
 		
 		Mockito.when(modelMapper.map(userForm, User.class)).thenReturn(user);
 		

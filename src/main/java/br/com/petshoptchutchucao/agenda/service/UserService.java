@@ -76,7 +76,7 @@ public class UserService {
 		for (int i = 0;  i < profilesVetor.length; i++) {
 			Profile profile = profileRepository.getById(profilesVetor[i])
 												.orElseThrow(() -> new MongoException("Perfil não encontrado"));
-												
+			//System.out.println(profile.getId()+"\n"+profile.getDescription());
 			profiles.add(profile);
 		}
 		

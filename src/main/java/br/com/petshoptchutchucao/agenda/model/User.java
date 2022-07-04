@@ -18,17 +18,12 @@ public class User {
 	private Status status;
 	
 	public User() {}
-	
-	public User(String id, String email, String name) {
-		this.id = id;
-		this.email = email;
-		this.name = name;
-	}
 
-	public User(String email, String name, List<Profile> profiles) {
+	public User(String email, String name, List<Profile> profiles, Status status) {
 		this.email = email;
 		this.name = name;
 		this.profiles = profiles;
+		this.status = status;
 	}
 
 	public User(String id, String email, String password, String name, List<Profile> profiles, Status status) {
