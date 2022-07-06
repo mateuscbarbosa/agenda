@@ -70,6 +70,15 @@ public class UserService {
 		return modelMapper.map(user, UserOutputDto.class);
 	}
 	
+	@Transactional
+	public void remove(String id) {
+		User user = userRepository.findById(id).get();
+		
+		user.setStatus(Status.INATIVO);
+		
+		userRepository.save(user);
+	}
+	
 	private List<Profile> findProfiles (Integer[] profilesVetor){
 		List<Profile> profiles = new ArrayList<>();
 		
@@ -82,4 +91,6 @@ public class UserService {
 		
 		return profiles;
 	}
+
+
 }
