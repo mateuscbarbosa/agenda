@@ -113,20 +113,25 @@ public class UserServiceTest {
 		
 		Mockito.when(profileRepository.getById(profilesVetor[0])).thenReturn(Optional.of(profile));
 		
-		User user = modelMapper.map(userUpdate, User.class);
-
-		Mockito.when(modelMapper.map(userUpdate, User.class)).thenReturn(user);
-
-		Mockito.when(userRepository.findById(userUpdate.getId()).get()).thenReturn(user);
+		User user = new User(userUpdate.getId(),
+								userUpdate.getEmail(),
+								userUpdate.getPassword(),
+								userUpdate.getName(),
+								profilesList,
+								userUpdate.getStatus());
 		
-		Mockito.when(modelMapper.map(user, UserOutputDto.class)).thenReturn(new UserOutputDto(null, user.getEmail(), user.getName()));
-
-		UserOutputDto userOutput = service.update(userUpdate);
-
+		Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+		
+		Mockito.when(modelMapper.map(user, UserOutputDto.class)).thenReturn(new UserOutputDto(null,
+																				user.getEmail(),
+																				user.getName()));
+		
+		UserOutputDto userDto = service.update(userUpdate);
+		
 		Mockito.verify(userRepository).save(Mockito.any());
-
-		assertEquals(userUpdate.getEmail(), userOutput.getEmail());
-		assertEquals(userUpdate.getName(), userOutput.getName());
+		
+		assertEquals(userUpdate.getEmail(), userDto.getEmail());
+		assertEquals(userUpdate.getName(), userDto.getName());
 	}
 
 }
