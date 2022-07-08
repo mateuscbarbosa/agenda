@@ -2,6 +2,7 @@ package br.com.petshoptchutchucao.agenda.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mongodb.MongoException;
-
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.infra.PasswordGeneratorPassay;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
@@ -83,10 +83,14 @@ public class UserService {
 		List<Profile> profiles = new ArrayList<>();
 		
 		for (int i = 0;  i < profilesVetor.length; i++) {
-			Profile profile = profileRepository.getById(profilesVetor[i])
-												.orElseThrow(() -> new MongoException("Perfil não encontrado"));
-			//System.out.println(profile.getId()+"\n"+profile.getDescription());
-			profiles.add(profile);
+			try {
+				Profile profile = profileRepository.getById(profilesVetor[i]).get();
+				profiles.add(profile);
+			}catch(NoSuchElementException ex) {
+				throw new BusinessRulesException("Código de Perfil: "
+													+profilesVetor[i]
+													+", não encontrado");
+			}
 		}
 		
 		return profiles;
