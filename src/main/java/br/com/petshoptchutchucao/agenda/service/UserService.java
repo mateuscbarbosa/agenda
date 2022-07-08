@@ -57,7 +57,7 @@ public class UserService {
 
 	@Transactional
 	public UserOutputDto update(UserUpdateFormDto userForm) {
-		User user = userRepository.findById(userForm.getId()).get();
+		User user = userRepository.findById(userForm.getId()).orElseThrow(() -> new BusinessRulesException("ID do usuário não encontrado."));
 		
 		user.updateInfo(userForm.getEmail(),
 						userForm.getName(),

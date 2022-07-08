@@ -1,14 +1,18 @@
 package br.com.petshoptchutchucao.agenda.infra;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.com.petshoptchutchucao.agenda.dto.Error400OutputDto;
 import br.com.petshoptchutchucao.agenda.dto.Error500OutputDto;
 
 @RestControllerAdvice
@@ -28,6 +32,15 @@ public class ErrorHandling {
 									ex.getClass().toString(),
 									ex.getMessage(),
 									req.getRequestURI());
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public List<Error400OutputDto> handleError400(MethodArgumentNotValidException ex){
+		return ex.getFieldErrors()
+				  .stream()
+				  .map(error -> new Error400OutputDto(error.getField(), error.getDefaultMessage()))
+				  .collect(Collectors.toList());
 	}
 	
 }

@@ -88,7 +88,7 @@ public class UserControllerTest {
 				.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-			.andExpect(MockMvcResultMatchers.status().isInternalServerError());
+			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test
