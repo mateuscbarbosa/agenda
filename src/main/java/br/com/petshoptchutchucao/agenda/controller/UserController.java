@@ -53,7 +53,7 @@ public class UserController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<UserOutputDto> remove(@PathVariable @NotBlank String id){
-		service.remove(id);
+		service.inactivate(id);
 		
 		return ResponseEntity.noContent().build();
 	}

@@ -71,7 +71,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public void remove(String id) {
+	public void inactivate(String id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do usuário não encontrado."));
 		
 		user.setStatus(Status.INATIVO);

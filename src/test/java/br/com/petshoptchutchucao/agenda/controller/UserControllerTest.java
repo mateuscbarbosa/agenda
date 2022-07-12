@@ -41,17 +41,18 @@ public class UserControllerTest {
 	@Autowired
 	private ProfileRepository profileRepository;
 	
-	private ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	private Integer profilesVetor[] = new Integer[1];
 	private List<Profile> profilesList = new ArrayList<>();
 	
-	private User createNewUserInBD() {
+	private User createNewUserInBD(String email) {
 		profilesVetor[0]=0;
 		Profile profile = profileRepository.getById(profilesVetor[0]).get();
 		profilesList.add(profile);
 		
-		User newUser = new User("teste@email.com.br", "Teste Controller", profilesList, Status.ATIVO);
+		User newUser = new User(email, "Teste Controller", profilesList, Status.ATIVO);
 		userRepository.save(newUser);
 		
 		User registred = userRepository.findByEmail(newUser.getEmail());
@@ -129,7 +130,7 @@ public class UserControllerTest {
 	@Test
 	void couldUpdateUserWithCorrectId() throws Exception {
 		profilesVetor[0] = 10;
-		User user = createNewUserInBD();
+		User user = createNewUserInBD("teste@email.com.br");
 		
 		UserUpdateFormDto userUpdate = new UserUpdateFormDto(user.getId(),
 															user.getEmail(),
@@ -149,4 +150,13 @@ public class UserControllerTest {
 			.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
 
+	@Test
+	void couldInactiveAnUserWithCorrectId() throws Exception {
+		User user = createNewUserInBD("teste@emaill.com.br");
+		
+		
+		mvc.perform(MockMvcRequestBuilders
+				.delete("/users/"+user.getId()))
+			.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
 }

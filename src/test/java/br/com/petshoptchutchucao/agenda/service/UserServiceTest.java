@@ -135,7 +135,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	void couldRemoveAnExistentUser() {
+	void couldInactiveAnExistentUser() {
 		User user = new User("123456",
 						"teste@email.com.br",
 						"$3nh@1",
@@ -145,7 +145,7 @@ public class UserServiceTest {
 		
 		Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 		
-		service.remove(user.getId());
+		service.inactivate(user.getId());
 		
 		Mockito.verify(userRepository).save(Mockito.any());
 	}
