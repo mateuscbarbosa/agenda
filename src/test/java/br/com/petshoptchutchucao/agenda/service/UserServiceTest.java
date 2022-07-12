@@ -43,7 +43,7 @@ public class UserServiceTest {
 
 	@InjectMocks
 	private UserService service;
-
+	
 	@Test
 	void couldNotRegisterAnUserWithInsuficientData() {
 		profilesVetor[0] = 0;
@@ -134,4 +134,19 @@ public class UserServiceTest {
 		assertEquals(userUpdate.getName(), userDto.getName());
 	}
 
+	@Test
+	void couldRemoveAnExistentUser() {
+		User user = new User("123456",
+						"teste@email.com.br",
+						"$3nh@1",
+						"Teste",
+						profilesList,
+						Status.ATIVO);
+		
+		Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+		
+		service.remove(user.getId());
+		
+		Mockito.verify(userRepository).save(Mockito.any());
+	}
 }
