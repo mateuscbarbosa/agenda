@@ -20,6 +20,7 @@ import com.mongodb.MongoException;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.User;
@@ -58,9 +59,27 @@ public class UserServiceTest {
 
 		assertThrows(MongoException.class, () -> service.register(userForm));
 	}
+	
+	@Test
+	void couldNotRegisterAnUserWithExistentEmail() {
+		profilesVetor[0] = 0;
+		Profile profile = new Profile();
+		
+		UserFormDto userForm = new UserFormDto("teste@teste.com.br","Teste", profilesVetor);
+		
+		Mockito.when(profileRepository.getById(profilesVetor[0])).thenReturn(Optional.of(profile));
+		
+		User user = new User(userForm.getEmail(), userForm.getName(), profilesList, Status.ATIVO);
+		
+		Mockito.when(modelMapper.map(userForm, User.class)).thenReturn(user);
+		
+		Mockito.when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
+		
+		assertThrows(BusinessRulesException.class, () -> service.register(userForm));
+	}
 
 	@Test
-	void couldRegisterAnUserWithCompleteData() {
+	void couldRegisterAnUserWithCompleteDataAndUniqueEmail() {
 		profilesVetor[0] = 0;
 		Profile profile = new Profile();
 		UserFormDto userForm = new UserFormDto("teste@teste.com.br", "Teste", profilesVetor);
@@ -97,9 +116,37 @@ public class UserServiceTest {
 
 		assertThrows(MongoException.class, () -> service.update(userUpdate));
 	}
+	
+	@Test
+	void couldNotUpdateAnExistentUserWithADiferentEmailOrNoUnique() {
+		profilesVetor[0] = 10;
+		Profile profile = new Profile();
+		
+		UserUpdateFormDto userUpdate = new UserUpdateFormDto("123456",
+															"testeoutro@email.com.br",
+															"Teste",
+															profilesVetor,
+															Status.ATIVO,
+															"$3nh@1");
+		
+		Mockito.when(profileRepository.getById(profilesVetor[0])).thenReturn(Optional.of(profile));
+		
+		User user = new User(userUpdate.getId(),
+								"teste@email.com.br",
+								userUpdate.getPassword(),
+								userUpdate.getName(),
+								profilesList,
+								userUpdate.getStatus());
+		
+		Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+				
+		Mockito.when(service.update(userUpdate)).thenThrow(BusinessRulesException.class);
+		
+		assertThrows(BusinessRulesException.class, () -> service.update(userUpdate));
+	}
 
 	@Test
-	void couldUpdateAnExistentUserId() {
+	void couldUpdateAnExistentUserIdAndSameEmailOrNewUniqueEmail() {
 		profilesVetor[0] = 10;
 		
 		Profile profile = new Profile();
