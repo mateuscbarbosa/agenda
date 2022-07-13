@@ -50,7 +50,9 @@ public class UserService {
 
 		user.setProfiles(findProfiles(userForm.getProfiles()));
 		user.setStatus(Status.ATIVO);
-		
+		if(verifyUniqueUserEmail(userForm.getEmail())) {
+			throw new BusinessRulesException("E-mail já está cadastrado no banco.");
+		}
 		userRepository.save(user);
 				
 		return modelMapper.map(user, UserOutputDto.class);
@@ -60,11 +62,16 @@ public class UserService {
 	public UserOutputDto update(UserUpdateFormDto userForm) {
 		User user = userRepository.findById(userForm.getId()).orElseThrow(() -> new BusinessRulesException("ID do usuário não encontrado."));
 		
-		user.updateInfo(userForm.getEmail(),
-						userForm.getName(),
-						userForm.getPassword(),
-						findProfiles(userForm.getProfiles()),
-						userForm.getStatus());
+		if(user.getEmail().equals(userForm.getEmail()) || !verifyUniqueUserEmail(userForm.getEmail())) {
+			user.updateInfo(userForm.getEmail(),
+					userForm.getName(),
+					userForm.getPassword(),
+					findProfiles(userForm.getProfiles()),
+					userForm.getStatus());
+		}
+		else {
+			throw new BusinessRulesException("E-mail já está cadastrado no banco para outro usuário.");
+		}
 		
 		userRepository.save(user);
 		
@@ -101,6 +108,13 @@ public class UserService {
 		}
 		
 		return profiles;
+	}
+	
+	private boolean verifyUniqueUserEmail(String email) {
+		if(userRepository.existsByEmail(email)) {
+			return true;
+		}
+		return false;
 	}
 
 }

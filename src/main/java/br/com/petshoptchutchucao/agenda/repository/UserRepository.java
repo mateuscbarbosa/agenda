@@ -18,4 +18,6 @@ public interface UserRepository extends MongoRepository<User, String>{
 	@Query(value = "{'email': {$regex: ?0}}", delete = true)
 	void deleteAllByEmail(String email);
 
+	boolean existsByEmail(String email);
+
 }
