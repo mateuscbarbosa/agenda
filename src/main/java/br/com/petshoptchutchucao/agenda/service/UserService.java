@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.petshoptchutchucao.agenda.dto.UserDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
@@ -78,6 +79,12 @@ public class UserService {
 		
 		userRepository.save(user);
 	}
+
+	@Transactional
+	public UserDetaliedOutputDto details(String id) {
+		User user = userRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do usuários não encontrado."));
+		return modelMapper.map(user, UserDetaliedOutputDto.class);
+	}
 	
 	private List<Profile> findProfiles (Integer[] profilesVetor){
 		List<Profile> profiles = new ArrayList<>();
@@ -95,6 +102,5 @@ public class UserService {
 		
 		return profiles;
 	}
-
 
 }
