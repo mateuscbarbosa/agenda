@@ -91,7 +91,23 @@ public class UserControllerTest {
 	}
 	
 	@Test
-	void couldRegisterUserWithCompleteData() throws Exception {
+	void couldNotRegisterUserWithANonUniqueEmail() throws Exception {
+		profilesVetor[0] = 10;
+		User newUser = createNewUserInBD("testee@email.com.br");
+		
+		UserFormDto userForm = new UserFormDto("testee@email.com.br","Teste",profilesVetor);
+		
+		String json = objectMapper.writeValueAsString(userForm);
+		
+		mvc.perform(MockMvcRequestBuilders
+					.post("/users")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(json))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
+	void couldRegisterUserWithCompleteDataAndUniqueEmail() throws Exception {
 		profilesVetor[0] = 10;
 		UserFormDto newUser = new UserFormDto("teste@teste.com.br","Teste",profilesVetor);
 		
@@ -125,6 +141,29 @@ public class UserControllerTest {
 				.content(json))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 		
+	}
+	
+	@Test
+	void couldNotUpdateUserWithDifferentEmailAlreadyExistent() throws Exception {
+		profilesVetor[0] = 10;
+		
+		User userWithEmail = createNewUserInBD("testeO@email.com.br");
+		User user = createNewUserInBD("testeU@email.com.br");
+		
+		UserUpdateFormDto userUpdate = new UserUpdateFormDto(user.getId(),
+															"testeO@email.com",
+															user.getName(),
+															profilesVetor,
+															user.getStatus(),
+															user.getPassword());
+		
+		String json = objectMapper.writeValueAsString(userUpdate);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.put("/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
 	@Test
