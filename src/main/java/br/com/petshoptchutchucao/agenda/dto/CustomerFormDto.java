@@ -1,31 +1,28 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerOutputDto {
+import javax.validation.constraints.NotBlank;
 
-	private String id;
+public class CustomerFormDto {
+
+	@NotBlank
 	private String name;
-	private String address;
-	private List<String> contactNumbers;
 	
-	public CustomerOutputDto() {}
+	@NotBlank
+	private String address;
+	
+	private List<String> contactNumbers = new ArrayList<>();
+	
+	public CustomerFormDto() {}
 
-	public CustomerOutputDto(String id,String name, String address, List<String> contactNumbers) {
-		this.id = id;
+	public CustomerFormDto(String name, String address, List<String> contactNumbers) {
 		this.name = name;
 		this.address = address;
 		this.contactNumbers = contactNumbers;
 	}
 
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
 	public String getName() {
 		return name;
 	}
