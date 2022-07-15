@@ -44,7 +44,16 @@ public class Customer {
 		this.contactNumbers = contactNumbers;
 		this.status = status;
 	}
-
+	
+	public void updateInfo(String id, String name, String address, List<Pet> pets, List<String> contactNumbers, Status status) {
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.pets = pets;
+		this.contactNumbers = contactNumbers;
+		this.status = status;
+	}
+	
 	public String getId() {
 		return id;
 	}

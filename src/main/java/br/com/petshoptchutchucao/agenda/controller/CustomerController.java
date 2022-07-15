@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.CustumerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.service.CustomerService;
 
 @RestController
@@ -38,5 +40,12 @@ public class CustomerController {
 		URI uri = uriBuilder.path("/customers/{id}").buildAndExpand(dto.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(dto);
+	}
+	
+	@PutMapping
+	public ResponseEntity<CustomerOutputDto> update (@RequestBody @Valid CustumerUpdateFormDto customerForm){
+		CustomerOutputDto customerOutput = service.update(customerForm);
+		
+		return ResponseEntity.ok(customerOutput);
 	}
 }
