@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Status;
 
-public class CustumerUpdateFormDto extends CustomerFormDto{
+public class CustomerUpdateFormDto extends CustomerFormDto{
 
 	@NotBlank
 	private String id;
@@ -19,15 +19,15 @@ public class CustumerUpdateFormDto extends CustomerFormDto{
 	
 	private List<Pet> pets = new ArrayList<>();
 
-	public CustumerUpdateFormDto() {}
+	public CustomerUpdateFormDto() {}
 
-	public CustumerUpdateFormDto(String id, Status status, List<Pet> pets) {
+	public CustomerUpdateFormDto(String id, Status status, List<Pet> pets) {
 		this.id = id;
 		this.status = status;
 		this.pets = pets;
 	}
 
-	public CustumerUpdateFormDto(String id, String name, String address, List<String> contactNumbers, Status status, List<Pet> pets) {
+	public CustomerUpdateFormDto(String id, String name, String address, List<String> contactNumbers, Status status, List<Pet> pets) {
 		super(name,address,contactNumbers);
 		this.id = id;
 		this.status = status;

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.CustumerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Status;
@@ -41,7 +41,7 @@ public class CustomerService {
 	}
 
 	@Transactional
-	public CustomerOutputDto update(CustumerUpdateFormDto customerForm) {
+	public CustomerOutputDto update(CustomerUpdateFormDto customerForm) {
 		Customer customer = customerRepository.findById(customerForm.getId()).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado"));
 		
 		customer.updateInfo(customerForm.getId(),

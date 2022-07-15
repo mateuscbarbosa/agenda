@@ -18,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.CustumerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.service.CustomerService;
 
 @RestController
@@ -43,7 +43,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<CustomerOutputDto> update (@RequestBody @Valid CustumerUpdateFormDto customerForm){
+	public ResponseEntity<CustomerOutputDto> update (@RequestBody @Valid CustomerUpdateFormDto customerForm){
 		CustomerOutputDto customerOutput = service.update(customerForm);
 		
 		return ResponseEntity.ok(customerOutput);
