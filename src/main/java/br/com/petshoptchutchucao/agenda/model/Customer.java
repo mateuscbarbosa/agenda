@@ -19,6 +19,14 @@ public class Customer {
 	
 	public Customer() {}
 
+	public Customer(String name, String address, List<String> contactNumbers, Status status) {
+		super();
+		this.name = name;
+		this.address = address;
+		this.contactNumbers = contactNumbers;
+		this.status = status;
+	}
+
 	public Customer(String name, String address, List<Pet> pets, List<String> contactNumbers, Status status) {
 		this.name = name;
 		this.address = address;

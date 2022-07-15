@@ -12,4 +12,7 @@ public interface CustomerRepository extends MongoRepository<Customer, String>{
 	@Query("{'status': 'ATIVO'}")
 	Page<Customer> findAllActive(Pageable pagination);
 
+	@Query(value = "{'name': {$regex: ?0}}", delete = true)
+	void deleteAllByName(String string);
+
 }
