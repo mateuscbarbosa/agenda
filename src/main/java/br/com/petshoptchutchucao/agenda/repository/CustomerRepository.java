@@ -15,4 +15,6 @@ public interface CustomerRepository extends MongoRepository<Customer, String>{
 	@Query(value = "{'name': {$regex: ?0}}", delete = true)
 	void deleteAllByName(String string);
 
+	Customer findByName(String name);
+
 }
