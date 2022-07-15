@@ -92,7 +92,7 @@ class CustomerControllerTest {
 	}
 	
 	@Test
-	void couldUpdateAcustomerWithCorrectId() throws Exception {
+	void couldUpdateACustomerWithCorrectId() throws Exception {
 		Customer customer = createCustomerInBD("Cliente Um Teste");
 		
 		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto(customer.getId(),
@@ -111,6 +111,15 @@ class CustomerControllerTest {
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 		
+	}
+	
+	@Test
+	void couldInactivateACustomerWithCorrectId() throws Exception {
+		Customer customer = createCustomerInBD("Cliente I Teste");
+		
+		mvc.perform(MockMvcRequestBuilders
+				.delete("/customers/"+customer.getId()))
+			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
 	private Customer createCustomerInBD(String name) {

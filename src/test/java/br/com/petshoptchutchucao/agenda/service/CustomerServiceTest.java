@@ -102,4 +102,14 @@ class CustomerServiceTest {
 		assertEquals(customerUpdate.getContactNumbers(), customerDto.getContactNumbers());
 	}
 
+	@Test
+	void couldInactivateACustomerWithCorrectId() {
+		Customer customer = new Customer("123456", "Cliente Teste", "Endereço", pets, contactNumbers, Status.ATIVO);
+		
+		Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
+		
+		service.inactivate(customer.getId());
+		
+		Mockito.verify(customerRepository).save(Mockito.any());
+	}
 }
