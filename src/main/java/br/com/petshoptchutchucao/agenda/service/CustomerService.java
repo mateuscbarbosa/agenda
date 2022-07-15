@@ -55,6 +55,15 @@ public class CustomerService {
 		
 		return modelMapper.map(customer, CustomerOutputDto.class);
 	}
+
+	@Transactional
+	public void inactivate(String id) {
+		Customer customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado"));
+		
+		customer.setStatus(Status.INATIVO);
+		
+		customerRepository.save(customer);
+	}
 	
 	
 }
