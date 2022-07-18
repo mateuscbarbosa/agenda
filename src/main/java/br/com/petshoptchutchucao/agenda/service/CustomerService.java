@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.petshoptchutchucao.agenda.dto.CustomerDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
@@ -42,7 +43,7 @@ public class CustomerService {
 
 	@Transactional
 	public CustomerOutputDto update(CustomerUpdateFormDto customerForm) {
-		Customer customer = customerRepository.findById(customerForm.getId()).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado"));
+		Customer customer = customerRepository.findById(customerForm.getId()).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado."));
 		
 		customer.updateInfo(customerForm.getId(),
 							customerForm.getName(),
@@ -58,11 +59,17 @@ public class CustomerService {
 
 	@Transactional
 	public void inactivate(String id) {
-		Customer customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado"));
+		Customer customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado."));
 		
 		customer.setStatus(Status.INATIVO);
 		
 		customerRepository.save(customer);
+	}
+
+	public CustomerDetaliedOutputDto details(String id) {
+		Customer customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado."));
+		
+		return modelMapper.map(customer, CustomerDetaliedOutputDto.class);
 	}
 	
 	
