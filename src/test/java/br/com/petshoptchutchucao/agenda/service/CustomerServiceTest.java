@@ -22,7 +22,6 @@ import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
 
@@ -31,7 +30,6 @@ import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
 class CustomerServiceTest {
 
 	private List<String> contactNumbers = new ArrayList<>();
-	private List<Pet> pets = new ArrayList<>();
 	
 	@Mock
 	private ModelMapper modelMapper;
@@ -68,7 +66,7 @@ class CustomerServiceTest {
 	
 	@Test
 	void couldNotUpdateACustomerWithInexistentId() {
-		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto("123456", "Cliente Teste", "Alguma Rua", contactNumbers, Status.ATIVO, pets);
+		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto("123456", "Cliente Teste", "Alguma Rua", contactNumbers, Status.ATIVO);
 		
 		Mockito.when(customerRepository.findById(customerUpdate.getId())).thenThrow(BusinessRulesException.class);
 		
@@ -77,12 +75,11 @@ class CustomerServiceTest {
 	
 	@Test
 	void couldUpdateACustomerWithCorrectId() {
-		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto("123456", "Cliente Teste", "Alguma Rua", contactNumbers, Status.ATIVO, pets);
+		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto("123456", "Cliente Teste", "Alguma Rua", contactNumbers, Status.ATIVO);
 		
 		Customer customer = new Customer(customerUpdate.getId(),
 										customerUpdate.getName(),
 										customerUpdate.getAddress(),
-										customerUpdate.getPets(),
 										customerUpdate.getContactNumbers(),
 										customerUpdate.getStatus());
 		
@@ -104,7 +101,7 @@ class CustomerServiceTest {
 
 	@Test
 	void couldInactivateACustomerWithCorrectId() {
-		Customer customer = new Customer("123456", "Cliente Teste", "Endereço", pets, contactNumbers, Status.ATIVO);
+		Customer customer = new Customer("123456", "Cliente Teste", "Endereço",contactNumbers, Status.ATIVO);
 		
 		Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
 		

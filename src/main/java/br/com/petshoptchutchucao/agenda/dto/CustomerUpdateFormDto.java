@@ -1,12 +1,10 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Status;
 
 public class CustomerUpdateFormDto extends CustomerFormDto{
@@ -17,21 +15,17 @@ public class CustomerUpdateFormDto extends CustomerFormDto{
 	@NotNull
 	private Status status;
 	
-	private List<Pet> pets = new ArrayList<>();
-
 	public CustomerUpdateFormDto() {}
 
-	public CustomerUpdateFormDto(String id, Status status, List<Pet> pets) {
+	public CustomerUpdateFormDto(String id, Status status) {
 		this.id = id;
 		this.status = status;
-		this.pets = pets;
 	}
 
-	public CustomerUpdateFormDto(String id, String name, String address, List<String> contactNumbers, Status status, List<Pet> pets) {
+	public CustomerUpdateFormDto(String id, String name, String address, List<String> contactNumbers, Status status) {
 		super(name,address,contactNumbers);
 		this.id = id;
 		this.status = status;
-		this.pets = pets;
 	}
 
 	public String getId() {
@@ -48,14 +42,6 @@ public class CustomerUpdateFormDto extends CustomerFormDto{
 
 	public void setStatus(Status status) {
 		this.status = status;
-	}
-
-	public List<Pet> getPets() {
-		return pets;
-	}
-
-	public void setPets(List<Pet> pets) {
-		this.pets = pets;
 	}
 	
 }

@@ -80,7 +80,7 @@ class CustomerControllerTest {
 
 	@Test
 	void couldNotUpdateACustomerWithIncorrectId() throws Exception {
-		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto("123456", "Cliente Teste", null, contactNumbers, Status.ATIVO, null);
+		CustomerUpdateFormDto customerUpdate = new CustomerUpdateFormDto("123456", "Cliente Teste", "Rua Teste, 00 - Bairro Teste. Teste/TE", contactNumbers, Status.ATIVO);
 		
 		String json = objectMapper.writeValueAsString(customerUpdate);
 		
@@ -99,8 +99,7 @@ class CustomerControllerTest {
 																		customer.getName(),
 																		"Rua Teste, 11 - Bairro Teste 1. Teste/TE",
 																		contactNumbers,
-																		customer.getStatus(),
-																		customer.getPets());
+																		customer.getStatus());
 		String json = objectMapper.writeValueAsString(customerUpdate);
 		String jsonWanted = "{\"name\":\"Cliente Um Teste\",\"address\":\"Rua Teste, 11 - Bairro Teste 1. Teste/TE\",\"contactNumbers\":[\"00 00000-0000\"]}";
 		

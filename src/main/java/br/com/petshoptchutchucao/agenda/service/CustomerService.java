@@ -48,7 +48,6 @@ public class CustomerService {
 		customer.updateInfo(customerForm.getId(),
 							customerForm.getName(),
 							customerForm.getAddress(),
-							customerForm.getPets(),
 							customerForm.getContactNumbers(),
 							customerForm.getStatus());
 		
