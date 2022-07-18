@@ -1,25 +1,49 @@
-package br.com.petshoptchutchucao.agenda.model;
+package br.com.petshoptchutchucao.agenda.dto;
 
 import java.time.LocalDate;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 
-@Document(collection = "pets")
-public class Pet {
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-	private String id;
+import br.com.petshoptchutchucao.agenda.model.Gender;
+import br.com.petshoptchutchucao.agenda.model.Size;
+import br.com.petshoptchutchucao.agenda.model.Spicies;
+
+public class PetFormDto {
+
+	@NotBlank
 	private String name;
+	
+	@NotNull
 	private Spicies spicies;
+	
+	@NotNull
 	private Gender gender;
+	
+	@NotBlank
 	private String breed;
+	
+	@NotNull
+	@PastOrPresent
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate birth;
+	
+	@NotNull
 	private Size size;
+	
 	private String observation;
+	
+	@NotBlank
+	@JsonAlias("customer_id")
 	private String customerId;
 	
-	public Pet() {}
+	public PetFormDto() {}
 
-	public Pet(String name, Spicies spicies, Gender gender, String breed, LocalDate birth, Size size,
+	public PetFormDto(String name, Spicies spicies, Gender gender, String breed, LocalDate birth, Size size,
 			String observation, String customerId) {
 		this.name = name;
 		this.spicies = spicies;
@@ -29,27 +53,6 @@ public class Pet {
 		this.size = size;
 		this.observation = observation;
 		this.customerId = customerId;
-	}
-
-	public Pet(String id, String name, Spicies spicies, Gender gender, String breed, LocalDate birth, Size size,
-			String observation, String customerId) {
-		this.id = id;
-		this.name = name;
-		this.spicies = spicies;
-		this.gender = gender;
-		this.breed = breed;
-		this.birth = birth;
-		this.size = size;
-		this.observation = observation;
-		this.customerId = customerId;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -115,4 +118,5 @@ public class Pet {
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
+	
 }
