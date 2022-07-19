@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Pet;
@@ -36,7 +37,7 @@ public class PetService {
 	public PetOutputDto register(PetFormDto petForm) {
 		Pet pet = modelMapper.map(petForm, Pet.class);
 		
-		Customer customer = customerRepository.findById(pet.getCustomerId()).orElseThrow(() -> new BusinessRulesException("ID de Cliente não encontrado."));	
+		Customer customer = findPetOwner(petForm.getCustomerId());	
 		
 		petRepository.save(pet);
 		
@@ -44,6 +45,38 @@ public class PetService {
 		customerRepository.save(customer);
 						
 		return modelMapper.map(pet, PetOutputDto.class);
+	}
+
+	@Transactional
+	public PetOutputDto update(PetUpdateFormDto petUpdate) {
+		Pet pet = petRepository.findById(petUpdate.getId()).orElseThrow(() -> new BusinessRulesException("ID do Pet não encontrado."));
+		Customer customer = findPetOwner(petUpdate.getCustomerId());
+		
+		pet.updateInfo(petUpdate.getName(),
+						petUpdate.getSpicies(),
+						petUpdate.getGender(),
+						petUpdate.getBreed(),
+						petUpdate.getBirth(),
+						petUpdate.getSize(),
+						petUpdate.getObservation(),
+						customer.getId());
+		
+		petRepository.save(pet);
+		
+		customer.getPets().stream()
+							.filter(p -> p.getId().equals(pet.getId()))
+							.findFirst()
+							.ifPresent(p->p.setName(petUpdate.getName()));
+		
+		customerRepository.save(customer);
+		
+		return modelMapper.map(pet, PetOutputDto.class);
+	}
+	
+	private Customer findPetOwner(String id) {
+		var customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado;"));
+		
+		return customer;
 	}
 
 }

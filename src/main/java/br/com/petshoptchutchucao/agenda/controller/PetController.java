@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.service.PetService;
 
 @RestController
@@ -38,6 +40,13 @@ public class PetController {
 		URI uri = uriBuilder.path("/pets/{id}").buildAndExpand(petOutput.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(petOutput);
+	}
+	
+	@PutMapping
+	public ResponseEntity<PetOutputDto> update(@RequestBody @Valid PetUpdateFormDto petUpdate){
+		PetOutputDto petOutput = service.update(petUpdate);
+		
+		return ResponseEntity.ok(petOutput);
 	}
 	
 }

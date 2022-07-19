@@ -44,6 +44,17 @@ public class Pet {
 		this.customerId = customerId;
 	}
 
+	public void updateInfo(String name, Spicies spicies, Gender gender, String breed, LocalDate birth, Size size, String observation, String customerId) {
+		this.name = name;
+		this.spicies = spicies;
+		this.gender = gender;
+		this.breed = breed;
+		this.birth = birth;
+		this.size = size;
+		this.observation = observation;
+		this.customerId = customerId;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -115,4 +126,5 @@ public class Pet {
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
+
 }
