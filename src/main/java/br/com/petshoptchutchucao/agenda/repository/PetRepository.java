@@ -10,4 +10,6 @@ public interface PetRepository extends MongoRepository<Pet, String>{
 	@Query(value = "{'name': {$regex: ?0}}", delete = true)
 	void deleteAllByName(String name);
 
+	Pet findByName(String name);
+
 }

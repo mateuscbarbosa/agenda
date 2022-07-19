@@ -18,8 +18,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
+import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Gender;
+import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Size;
 import br.com.petshoptchutchucao.agenda.model.Spicies;
 import br.com.petshoptchutchucao.agenda.model.Status;
@@ -84,7 +86,7 @@ class PetControllerTest {
 	
 	@Test
 	void couldRegisterAPatWithCompleteDataAndExistenteCustomer() throws Exception {
-		Customer customer = createCustomerInBD();
+		Customer customer = createCustomerInBD("Cliente1 Teste");
 		
 		PetFormDto petForm = new PetFormDto("Pet Teste",
 											Spicies.CACHORRO,
@@ -107,11 +109,68 @@ class PetControllerTest {
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
 	
-	private Customer createCustomerInBD() {
-		Customer customer = new Customer("Cliente Teste", "Rua Teste", null, Status.ATIVO);
+	@Test
+	void couldNotUpdateAPetWithWrongId() throws Exception {
+		PetUpdateFormDto petUpdate = new PetUpdateFormDto("123456",
+														"Pet Teste",
+														Spicies.CACHORRO,
+														Gender.MACHO,
+														"Vira Lata",
+														LocalDate.now(),
+														Size.GRANDE,
+														null,
+														"123465u");
+		
+		String json = objectMapper.writeValueAsString(petUpdate);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.put("/pets")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest());
+	}
+	
+	@Test
+	void couldUpdateAPetWithCorrectId() throws Exception {
+		Pet pet = createPetInBD();
+		
+		PetUpdateFormDto petUpdate = new PetUpdateFormDto(pet.getId(),
+														pet.getName(),
+														pet.getSpicies(),
+														Gender.FÊMEA,
+														"Husky",
+														pet.getBirth(),
+														Size.GRANDE,
+														"Observação",
+														pet.getCustomerId());
+		
+		String json = objectMapper.writeValueAsString(petUpdate);
+		
+		String jsonWanted = "{\"name\":\"Pet Teste\",\"spicies\":\"CACHORRO\",\"gender\":\"FÊMEA\"}";
+		
+		mvc.perform(MockMvcRequestBuilders
+				.put("/pets")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
+	}
+	
+	private Customer createCustomerInBD(String name) {
+		Customer customer = new Customer(name, "Rua Teste", null, Status.ATIVO);
 		customerRepository.save(customer);
 		
 		Customer registred = customerRepository.findByName(customer.getName());
+		
+		return registred;
+	}
+	
+	private Pet createPetInBD() {
+		Pet pet = new Pet("Pet Teste", Spicies.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null, createCustomerInBD("Cliente2 Teste").getId());
+		
+		petRepository.save(pet);
+		
+		Pet registred = petRepository.findByName(pet.getName());
 		
 		return registred;
 	}
