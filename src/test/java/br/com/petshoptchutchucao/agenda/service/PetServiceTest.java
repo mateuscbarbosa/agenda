@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Gender;
@@ -88,6 +89,36 @@ class PetServiceTest {
 		assertEquals(petDto.getSpicies(), petForm.getSpicies());
 		assertEquals(petDto.getGender(), petForm.getGender());
 		
+	}
+	
+	@Test
+	void couldUpdateAPetWithCorrectId() {
+		PetUpdateFormDto petUpdate = new PetUpdateFormDto("123456", "Bicho Teste", Spicies.GATO, Gender.FÊMEA, "Vira lata", LocalDate.now(), Size.PELO_CURTO, null, "123456u");
+		Customer customer = new Customer();
+		
+		Pet pet = new Pet(petUpdate.getId(),
+						petUpdate.getName(),
+						petUpdate.getSpicies(),
+						petUpdate.getGender(),
+						petUpdate.getBreed(),
+						petUpdate.getBirth(),
+						petUpdate.getSize(),
+						petUpdate.getObservation(),
+						petUpdate.getCustomerId());
+		
+		Mockito.when(petRepository.findById(petUpdate.getId())).thenReturn(Optional.of(pet));
+		
+		Mockito.when(customerRepository.findById(petUpdate.getCustomerId())).thenReturn(Optional.of(customer));
+		
+		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getGender()));
+		
+		PetOutputDto petDto = service.update(petUpdate);
+		
+		Mockito.verify(petRepository).save(Mockito.any());
+		
+		assertEquals(petUpdate.getName(), petDto.getName());
+		assertEquals(petUpdate.getSpicies(), petDto.getSpicies());
+		assertEquals(petUpdate.getGender(), petDto.getGender());
 	}
 
 }
