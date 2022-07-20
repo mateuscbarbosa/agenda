@@ -74,12 +74,7 @@ public class PetService {
 		return modelMapper.map(pet, PetOutputDto.class);
 	}
 	
-	private Customer findPetOwner(String id) {
-		var customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado;"));
-		
-		return customer;
-	}
-
+	@Transactional
 	public void delete(String id) {
 		Pet pet = petRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Pet não encontrado."));
 		
@@ -89,6 +84,12 @@ public class PetService {
 		
 		customer.deletePet(new PetSimplifiedOutputDto(pet.getId(), pet.getName()));
 		customerRepository.save(customer);
+	}
+	
+	private Customer findPetOwner(String id) {
+		var customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado;"));
+		
+		return customer;
 	}
 
 }
