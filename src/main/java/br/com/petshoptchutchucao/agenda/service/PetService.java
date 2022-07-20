@@ -41,6 +41,7 @@ public class PetService {
 		
 		Customer customer = findPetOwner(petForm.getCustomerId());	
 		
+		pet.setId(null);
 		petRepository.save(pet);
 		
 		customer.addPet(pet.getId(),pet.getName());

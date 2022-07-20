@@ -1,5 +1,8 @@
 package br.com.petshoptchutchucao.agenda.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,10 +14,13 @@ import br.com.petshoptchutchucao.agenda.dto.CustomerDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.dto.PetDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
+import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.repository.PetRepository;
 
 @Service
 public class CustomerService {
@@ -24,6 +30,9 @@ public class CustomerService {
 	
 	@Autowired
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private PetRepository petRepository;
 
 	public Page<CustomerOutputDto> list(Pageable pagination) {
 		Page<Customer> customers = customerRepository.findAllActive(pagination);
@@ -68,8 +77,18 @@ public class CustomerService {
 	public CustomerDetaliedOutputDto details(String id) {
 		Customer customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado."));
 		
-		return modelMapper.map(customer, CustomerDetaliedOutputDto.class);
+		CustomerDetaliedOutputDto customerDetalied = modelMapper.map(customer, CustomerDetaliedOutputDto.class);
+		
+		customerDetalied.setPets(petsDetaileds(customer.getId()));
+		
+		return customerDetalied;
 	}
 	
+	private List<PetDetaliedOutputDto> petsDetaileds(String customerId){
+		List<Pet> pets = petRepository.findAllbyCustomerId(customerId);
+		
+		return pets.stream().map(p -> modelMapper.map(p, PetDetaliedOutputDto.class))
+							.collect(Collectors.toList());
+	}
 	
 }
