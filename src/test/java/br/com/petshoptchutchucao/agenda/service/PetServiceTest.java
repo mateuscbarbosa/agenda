@@ -121,4 +121,17 @@ class PetServiceTest {
 		assertEquals(petUpdate.getGender(), petDto.getGender());
 	}
 
+	@Test
+	void couldDeleteAPetWithCorrectId() {
+		Pet pet = new Pet("123456", "Bicho Teste", Spicies.GATO, Gender.FÊMEA, "Vira lata", LocalDate.now(), Size.PELO_CURTO, null, "123456u");
+		Customer customer = new Customer();
+		
+		Mockito.when(petRepository.findById(pet.getId())).thenReturn(Optional.of(pet));
+		Mockito.when(customerRepository.findById(pet.getCustomerId())).thenReturn(Optional.of(customer));
+		
+		service.delete(pet.getId());
+		
+		Mockito.verify(petRepository).delete(Mockito.any());
+		
+	}
 }
