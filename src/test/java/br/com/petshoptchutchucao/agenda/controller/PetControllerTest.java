@@ -132,7 +132,7 @@ class PetControllerTest {
 	
 	@Test
 	void couldUpdateAPetWithCorrectId() throws Exception {
-		Pet pet = createPetInBD();
+		Pet pet = createPetInBD("Pett Teste","Cliente3 Teste");
 		
 		PetUpdateFormDto petUpdate = new PetUpdateFormDto(pet.getId(),
 														pet.getName(),
@@ -146,7 +146,7 @@ class PetControllerTest {
 		
 		String json = objectMapper.writeValueAsString(petUpdate);
 		
-		String jsonWanted = "{\"name\":\"Pet Teste\",\"spicies\":\"CACHORRO\",\"gender\":\"FÊMEA\"}";
+		String jsonWanted = "{\"name\":\"Pett Teste\",\"spicies\":\"CACHORRO\",\"gender\":\"FÊMEA\"}";
 		
 		mvc.perform(MockMvcRequestBuilders
 				.put("/pets")
@@ -154,6 +154,16 @@ class PetControllerTest {
 				.content(json))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
+	}
+	
+	@Test
+	void couldDeleteAPetWithCorretId() throws Exception {
+		Pet pet = createPetInBD("Pettt Teste","Cliente4 Teste");
+		
+		mvc.perform(MockMvcRequestBuilders
+				.delete("/pets/"+pet.getId()))
+			.andExpect(MockMvcResultMatchers.status().isNoContent());
+		
 	}
 	
 	private Customer createCustomerInBD(String name) {
@@ -165,8 +175,8 @@ class PetControllerTest {
 		return registred;
 	}
 	
-	private Pet createPetInBD() {
-		Pet pet = new Pet("Pet Teste", Spicies.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null, createCustomerInBD("Cliente2 Teste").getId());
+	private Pet createPetInBD(String petName, String customerName) {
+		Pet pet = new Pet(petName, Spicies.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null, createCustomerInBD(customerName).getId());
 		
 		petRepository.save(pet);
 		
