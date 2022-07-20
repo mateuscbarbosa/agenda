@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.PetSimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
@@ -77,6 +78,17 @@ public class PetService {
 		var customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado;"));
 		
 		return customer;
+	}
+
+	public void delete(String id) {
+		Pet pet = petRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Pet não encontrado."));
+		
+		Customer customer = findPetOwner(pet.getCustomerId());
+		
+		petRepository.delete(pet);
+		
+		customer.deletePet(new PetSimplifiedOutputDto(pet.getId(), pet.getName()));
+		customerRepository.save(customer);
 	}
 
 }

@@ -115,4 +115,8 @@ public class Customer {
 		this.pets.add(new PetSimplifiedOutputDto(idPet,namePet));
 	}
 	
+	public void deletePet(PetSimplifiedOutputDto pet) {
+		this.pets.removeIf(p -> p.getId().equals(pet.getId()));
+	}
+	
 }
