@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.petshoptchutchucao.agenda.dto.PetDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
@@ -57,6 +58,13 @@ public class PetController {
 		service.delete(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<PetDetaliedOutputDto> details (@PathVariable @NotBlank String id){
+		PetDetaliedOutputDto petDetailed = service.details(id);
+		
+		return ResponseEntity.ok(petDetailed);
 	}
 	
 }

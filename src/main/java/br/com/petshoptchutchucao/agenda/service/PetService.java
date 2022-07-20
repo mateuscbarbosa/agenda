@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.petshoptchutchucao.agenda.dto.PetDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetSimplifiedOutputDto;
@@ -84,6 +85,12 @@ public class PetService {
 		
 		customer.deletePet(new PetSimplifiedOutputDto(pet.getId(), pet.getName()));
 		customerRepository.save(customer);
+	}
+	
+	public PetDetaliedOutputDto details(String id) {
+		Pet pet = petRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Pet não encontrado."));
+		
+		return modelMapper.map(pet, PetDetaliedOutputDto.class);
 	}
 	
 	private Customer findPetOwner(String id) {
