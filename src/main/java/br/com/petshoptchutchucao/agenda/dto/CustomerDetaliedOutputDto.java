@@ -1,6 +1,5 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.petshoptchutchucao.agenda.model.Status;
