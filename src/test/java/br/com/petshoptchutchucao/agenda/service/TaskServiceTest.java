@@ -87,5 +87,16 @@ class TaskServiceTest {
 		assertEquals(taskUpdate.getName(), taskDto.getName());
 		assertEquals(task.getPrice(), taskDto.getPrice());
 	}
+	
+	@Test
+	void couldDeleteATaskWithCorrectId() {
+		Task task = new Task("123465", "Serviço Teste", Spicies.CACHORRO, Size.GIGANTE, new BigDecimal(100));
+		
+		Mockito.when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
+		
+		service.delete(task.getId());
+		
+		Mockito.verify(taskRepository).deleteById(Mockito.any());
+	}
 
 }
