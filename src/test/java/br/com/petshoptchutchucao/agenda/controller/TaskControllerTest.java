@@ -99,6 +99,15 @@ class TaskControllerTest {
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
+	
+	@Test
+	void couldDeleteATaskWithCorrectId() throws Exception{
+		Task task = createTaskInBD("Serviçooo Teste");
+		
+		mvc.perform(MockMvcRequestBuilders
+				.delete("/tasks/" + task.getId()))
+		.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
 
 	private Task createTaskInBD(String name) {
 		Task task = new Task(name, Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
