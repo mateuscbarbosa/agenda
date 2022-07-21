@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Task;
 import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
 
@@ -27,6 +29,19 @@ public class TaskService {
 
 	public TaskOutputDto register(TaskFormDto taskForm) {
 		Task task = modelMapper.map(taskForm, Task.class);
+		
+		taskRepository.save(task);
+		
+		return modelMapper.map(task, TaskOutputDto.class);
+	}
+
+	public TaskOutputDto update(TaskUpdateFormDto taskUpdate) {
+		Task task = taskRepository.findById(taskUpdate.getId()).orElseThrow(() ->new BusinessRulesException("ID do Serviço não encontrado."));
+		
+		task.updateInfo(taskUpdate.getName(),
+						taskUpdate.getSpicies(),
+						taskUpdate.getSize(),
+						taskUpdate.getPrice());
 		
 		taskRepository.save(task);
 		

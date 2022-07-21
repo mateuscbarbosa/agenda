@@ -31,7 +31,14 @@ public class Task {
 		this.size = size;
 		this.price = price;
 	}
-
+	
+	public void updateInfo(String name, Spicies spicies, Size size, BigDecimal price) {
+		this.name = name;
+		this.spicies = spicies;
+		this.size = size;
+		this.price = price;
+	}
+	
 	public String getId() {
 		return id;
 	}

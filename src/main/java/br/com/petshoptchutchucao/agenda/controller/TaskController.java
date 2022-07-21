@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.service.TaskService;
 
 @RestController
@@ -38,5 +40,12 @@ public class TaskController {
 		URI uri = uriBuilder.path("/tasks/{id}").buildAndExpand(taskDto.getId()).toUri();
 		
 		return ResponseEntity.created(uri).body(taskDto);
+	}
+	
+	@PutMapping
+	public ResponseEntity<TaskOutputDto> update(@RequestBody @Valid TaskUpdateFormDto taskUpdate){
+		TaskOutputDto taskDto = service.update(taskUpdate);
+		
+		return ResponseEntity.ok(taskDto);
 	}
 }
