@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
@@ -27,6 +28,7 @@ public class TaskService {
 		return tasks.map(t -> modelMapper.map(t, TaskOutputDto.class));
 	}
 
+	@Transactional
 	public TaskOutputDto register(TaskFormDto taskForm) {
 		Task task = modelMapper.map(taskForm, Task.class);
 		
@@ -35,6 +37,7 @@ public class TaskService {
 		return modelMapper.map(task, TaskOutputDto.class);
 	}
 
+	@Transactional
 	public TaskOutputDto update(TaskUpdateFormDto taskUpdate) {
 		Task task = taskRepository.findById(taskUpdate.getId()).orElseThrow(() ->new BusinessRulesException("ID do Serviço não encontrado."));
 		
@@ -46,6 +49,13 @@ public class TaskService {
 		taskRepository.save(task);
 		
 		return modelMapper.map(task, TaskOutputDto.class);
+	}
+
+	@Transactional
+	public void delete(String id) {
+		Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Serviço não encontrado."));
+		
+		taskRepository.deleteById(task.getId());
 	}
 
 }
