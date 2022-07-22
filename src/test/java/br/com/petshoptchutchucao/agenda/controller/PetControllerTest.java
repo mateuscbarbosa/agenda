@@ -99,7 +99,7 @@ class PetControllerTest {
 		
 		String json = objectMapper.writeValueAsString(petForm);
 		
-		String jsonWanted = "{\"name\":\"Pet Teste\",\"spicies\":\"CACHORRO\",\"gender\":\"MACHO\"}";
+		String jsonWanted = "{\"name\":\"Pet Teste\",\"spicies\":\"CACHORRO\",\"breed\":\"Pastor Alemão\"}";
 		
 		mvc.perform(MockMvcRequestBuilders
 				.post("/pets")
@@ -146,7 +146,7 @@ class PetControllerTest {
 		
 		String json = objectMapper.writeValueAsString(petUpdate);
 		
-		String jsonWanted = "{\"name\":\"Pett Teste\",\"spicies\":\"CACHORRO\",\"gender\":\"FÊMEA\"}";
+		String jsonWanted = "{\"name\":\"Pett Teste\",\"spicies\":\"CACHORRO\",\"breed\":\"Husky\"}";
 		
 		mvc.perform(MockMvcRequestBuilders
 				.put("/pets")

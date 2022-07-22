@@ -79,7 +79,7 @@ class PetServiceTest {
 		
 		Mockito.when(customerRepository.findById(pet.getCustomerId())).thenReturn(Optional.of(customer));
 		
-		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getGender()));
+		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getBreed()));
 		
 		PetOutputDto petDto = service.register(petForm);
 		
@@ -87,7 +87,7 @@ class PetServiceTest {
 		
 		assertEquals(petDto.getName(), petForm.getName());
 		assertEquals(petDto.getSpicies(), petForm.getSpicies());
-		assertEquals(petDto.getGender(), petForm.getGender());
+		assertEquals(petDto.getBreed(), petForm.getBreed());
 		
 	}
 	
@@ -110,7 +110,7 @@ class PetServiceTest {
 		
 		Mockito.when(customerRepository.findById(petUpdate.getCustomerId())).thenReturn(Optional.of(customer));
 		
-		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getGender()));
+		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getBreed()));
 		
 		PetOutputDto petDto = service.update(petUpdate);
 		
@@ -118,7 +118,7 @@ class PetServiceTest {
 		
 		assertEquals(petUpdate.getName(), petDto.getName());
 		assertEquals(petUpdate.getSpicies(), petDto.getSpicies());
-		assertEquals(petUpdate.getGender(), petDto.getGender());
+		assertEquals(petUpdate.getBreed(), petDto.getBreed());
 	}
 
 	@Test

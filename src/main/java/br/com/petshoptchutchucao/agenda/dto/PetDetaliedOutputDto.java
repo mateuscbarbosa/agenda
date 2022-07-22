@@ -10,7 +10,7 @@ import br.com.petshoptchutchucao.agenda.model.Spicies;
 
 public class PetDetaliedOutputDto extends PetOutputDto{
 
-	private String breed;
+	private Gender gender;
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate birth;
 	private Size size;
@@ -19,20 +19,20 @@ public class PetDetaliedOutputDto extends PetOutputDto{
 	public PetDetaliedOutputDto() {}
 
 	public PetDetaliedOutputDto(String id, String name, Spicies spicies, Gender gender, String breed, LocalDate birth, Size size, String observation) {
-		super(id, name, spicies, gender);
+		super(id, name, spicies, breed);
 		
-		this.breed = breed;
+		this.gender = gender;
 		this.birth = birth;
 		this.size = size;
 		this.observation = observation;
 	}
 
-	public String getBreed() {
-		return breed;
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setBreed(String breed) {
-		this.breed = breed;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public LocalDate getBirth() {

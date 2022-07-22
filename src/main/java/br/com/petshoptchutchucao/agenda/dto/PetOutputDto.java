@@ -1,19 +1,18 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
-import br.com.petshoptchutchucao.agenda.model.Gender;
 import br.com.petshoptchutchucao.agenda.model.Spicies;
 
 public class PetOutputDto extends SimplifiedOutputDto{
 
 	private Spicies spicies;
-	private Gender gender;
+	private String breed;
 	
 	public PetOutputDto() {}
 
-	public PetOutputDto(String id, String name, Spicies spicies, Gender gender) {
+	public PetOutputDto(String id, String name, Spicies spicies, String breed) {
 		super(id, name);
 		this.spicies = spicies;
-		this.gender = gender;
+		this.breed = breed;
 	}
 
 	public Spicies getSpicies() {
@@ -24,12 +23,12 @@ public class PetOutputDto extends SimplifiedOutputDto{
 		this.spicies = spicies;
 	}
 
-	public Gender getGender() {
-		return gender;
+	public String getBreed() {
+		return breed;
 	}
 
-	public void setGender(Gender gender) {
-		this.gender = gender;
+	public void setBreed(String breed) {
+		this.breed = breed;
 	}
 		
 }
