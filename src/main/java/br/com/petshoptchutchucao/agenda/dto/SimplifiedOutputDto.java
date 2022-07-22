@@ -1,12 +1,12 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
 public class SimplifiedOutputDto {
-
+	
 	private String id;
 	private String name;
-	
-	public SimplifiedOutputDto() {}
 
+	public SimplifiedOutputDto() {};
+	
 	public SimplifiedOutputDto(String id, String name) {
 		this.id = id;
 		this.name = name;
@@ -27,5 +27,5 @@ public class SimplifiedOutputDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-		
+
 }

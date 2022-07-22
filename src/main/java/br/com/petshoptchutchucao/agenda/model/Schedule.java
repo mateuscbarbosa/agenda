@@ -9,8 +9,6 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
-
 @Document(collection="schedules")
 public class Schedule {
 
@@ -18,17 +16,19 @@ public class Schedule {
 	private String id;
 	private LocalDate date;
 	private LocalTime time;
-	private SimplifiedOutputDto customer;
+	private Customer customer;
 	private Pet pet;
 	private List<Task> tasks = new ArrayList<>();
 	private BigDecimal cost;
 	private String observation;
 	private PaymentStatus payment;
+	private ConfirmationStatus advised;
+	private ConfirmationStatus delivered;
 	
 	public Schedule() {}
 
-	public Schedule(String id, LocalDate date, LocalTime time, SimplifiedOutputDto customer, Pet pet, List<Task> tasks,
-			BigDecimal cost, String observation, PaymentStatus payment) {
+	public Schedule(String id, LocalDate date, LocalTime time, Customer customer, Pet pet, List<Task> tasks,
+			BigDecimal cost, String observation, PaymentStatus payment, ConfirmationStatus advised, ConfirmationStatus delivered) {
 		this.id = id;
 		this.date = date;
 		this.time = time;
@@ -38,6 +38,8 @@ public class Schedule {
 		this.cost = cost;
 		this.observation = observation;
 		this.payment = payment;
+		this.advised = advised;
+		this.delivered = delivered;
 	}
 
 	public String getId() {
@@ -64,11 +66,11 @@ public class Schedule {
 		this.time = time;
 	}
 
-	public SimplifiedOutputDto getCustomer() {
+	public Customer getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(SimplifiedOutputDto customer) {
+	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
 
@@ -110,6 +112,22 @@ public class Schedule {
 
 	public void setPayment(PaymentStatus payment) {
 		this.payment = payment;
+	}
+
+	public ConfirmationStatus getAdvised() {
+		return advised;
+	}
+
+	public void setAdvised(ConfirmationStatus advised) {
+		this.advised = advised;
+	}
+
+	public ConfirmationStatus getDelivered() {
+		return delivered;
+	}
+
+	public void setDelivered(ConfirmationStatus delivered) {
+		this.delivered = delivered;
 	}
 	
 }
