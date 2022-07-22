@@ -1,33 +1,14 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
-public class UserOutputDto {
+public class UserOutputDto extends SimplifiedOutputDto{
 
-	private String id;
 	private String email;
-	private String name;
 	
 	public UserOutputDto() {}
 
 	public UserOutputDto(String id, String email,  String name) {
-		this.id = id;
-		this.name = name;
+		super(id,name);
 		this.email = email;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getEmail() {

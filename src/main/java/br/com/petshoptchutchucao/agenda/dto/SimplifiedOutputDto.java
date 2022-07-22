@@ -1,13 +1,13 @@
 package br.com.petshoptchutchucao.agenda.dto;
 
-public class PetSimplifiedOutputDto {
+public class SimplifiedOutputDto {
 
 	private String id;
 	private String name;
 	
-	public PetSimplifiedOutputDto() {}
+	public SimplifiedOutputDto() {}
 
-	public PetSimplifiedOutputDto(String id, String name) {
+	public SimplifiedOutputDto(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}

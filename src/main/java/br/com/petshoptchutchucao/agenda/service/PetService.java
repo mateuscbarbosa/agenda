@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.petshoptchutchucao.agenda.dto.PetDetaliedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.PetSimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
@@ -84,7 +84,7 @@ public class PetService {
 		
 		petRepository.delete(pet);
 		
-		customer.deletePet(new PetSimplifiedOutputDto(pet.getId(), pet.getName()));
+		customer.deletePet(new SimplifiedOutputDto(pet.getId(), pet.getName()));
 		customerRepository.save(customer);
 	}
 	

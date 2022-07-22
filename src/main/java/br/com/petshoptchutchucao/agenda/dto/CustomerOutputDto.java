@@ -2,36 +2,17 @@ package br.com.petshoptchutchucao.agenda.dto;
 
 import java.util.List;
 
-public class CustomerOutputDto {
+public class CustomerOutputDto extends SimplifiedOutputDto{
 
-	private String id;
-	private String name;
 	private String address;
 	private List<String> contactNumbers;
 	
 	public CustomerOutputDto() {}
 
 	public CustomerOutputDto(String id,String name, String address, List<String> contactNumbers) {
-		this.id = id;
-		this.name = name;
+		super(id, name);
 		this.address = address;
 		this.contactNumbers = contactNumbers;
-	}
-
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getAddress() {

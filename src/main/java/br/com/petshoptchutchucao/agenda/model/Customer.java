@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import br.com.petshoptchutchucao.agenda.dto.PetSimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 
 @Document(collection = "customers")
 public class Customer {
@@ -15,7 +15,7 @@ public class Customer {
 	private String id;
 	private String name;
 	private String address;
-	private List<PetSimplifiedOutputDto> pets = new ArrayList<>();
+	private List<SimplifiedOutputDto> pets = new ArrayList<>();
 	private List<String> contactNumbers = new ArrayList<>();
 	private Status status;
 	
@@ -29,7 +29,7 @@ public class Customer {
 		this.status = status;
 	}
 
-	public Customer(String name, String address, List<PetSimplifiedOutputDto> pets, List<String> contactNumbers, Status status) {
+	public Customer(String name, String address, List<SimplifiedOutputDto> pets, List<String> contactNumbers, Status status) {
 		this.name = name;
 		this.address = address;
 		this.pets = pets;
@@ -45,7 +45,7 @@ public class Customer {
 		this.status = status;
 	}
 	
-	public Customer(String id, String name, String address, List<PetSimplifiedOutputDto> pets, List<String> contactNumbers,
+	public Customer(String id, String name, String address, List<SimplifiedOutputDto> pets, List<String> contactNumbers,
 			Status status) {
 		this.id = id;
 		this.name = name;
@@ -79,11 +79,11 @@ public class Customer {
 		this.name = name;
 	}
 
-	public List<PetSimplifiedOutputDto> getPets() {
+	public List<SimplifiedOutputDto> getPets() {
 		return pets;
 	}
 
-	public void setPets(List<PetSimplifiedOutputDto> pets) {
+	public void setPets(List<SimplifiedOutputDto> pets) {
 		this.pets = pets;
 	}
 
@@ -112,10 +112,10 @@ public class Customer {
 	}
 
 	public void addPet(String idPet, String namePet) {
-		this.pets.add(new PetSimplifiedOutputDto(idPet,namePet));
+		this.pets.add(new SimplifiedOutputDto(idPet,namePet));
 	}
 	
-	public void deletePet(PetSimplifiedOutputDto pet) {
+	public void deletePet(SimplifiedOutputDto pet) {
 		this.pets.removeIf(p -> p.getId().equals(pet.getId()));
 	}
 	

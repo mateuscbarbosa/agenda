@@ -3,7 +3,7 @@ package br.com.petshoptchutchucao.agenda.dto;
 import br.com.petshoptchutchucao.agenda.model.Gender;
 import br.com.petshoptchutchucao.agenda.model.Spicies;
 
-public class PetOutputDto extends PetSimplifiedOutputDto{
+public class PetOutputDto extends SimplifiedOutputDto{
 
 	private Spicies spicies;
 	private Gender gender;
