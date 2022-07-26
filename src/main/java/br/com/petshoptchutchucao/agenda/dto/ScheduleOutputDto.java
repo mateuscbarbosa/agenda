@@ -11,7 +11,7 @@ public class ScheduleOutputDto {
 
 	private String id;
 	private LocalTime time;
-	private CustomerOutputDto customer;
+	private SimplifiedOutputDto customer;
 	private PetOutputDto pet;
 	private List<TaskOutputDto> tasks;
 	private String observation;
@@ -22,7 +22,7 @@ public class ScheduleOutputDto {
 	
 	public ScheduleOutputDto() {}
 	
-	public ScheduleOutputDto(String id, LocalTime time, CustomerOutputDto customer, PetOutputDto pet,
+	public ScheduleOutputDto(String id, LocalTime time, SimplifiedOutputDto customer, PetOutputDto pet,
 			List<TaskOutputDto> tasks, String observation, BigDecimal cost, ConfirmationStatus advised,
 			ConfirmationStatus delivered, PaymentStatus payment) {
 		this.id = id;
@@ -53,11 +53,11 @@ public class ScheduleOutputDto {
 		this.time = time;
 	}
 
-	public CustomerOutputDto getCustomer() {
+	public SimplifiedOutputDto getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(CustomerOutputDto customer) {
+	public void setCustomer(SimplifiedOutputDto customer) {
 		this.customer = customer;
 	}
 
