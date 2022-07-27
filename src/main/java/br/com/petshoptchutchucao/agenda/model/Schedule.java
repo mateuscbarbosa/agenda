@@ -28,6 +28,22 @@ public class Schedule {
 	private ConfirmationStatus delivered;
 	
 	public Schedule() {}
+	
+	public Schedule(LocalDate date, LocalTime time, SimplifiedOutputDto customer, Pet pet, List<Task> tasks,
+			BigDecimal cost, String observation, PaymentStatus payment, ConfirmationStatus advised,
+			ConfirmationStatus delivered) {
+		super();
+		this.date = date;
+		this.time = time;
+		this.customer = customer;
+		this.pet = pet;
+		this.tasks = tasks;
+		this.cost = cost;
+		this.observation = observation;
+		this.payment = payment;
+		this.advised = advised;
+		this.delivered = delivered;
+	}
 
 	public Schedule(String id, LocalDate date, LocalTime time, SimplifiedOutputDto customer, Pet pet, List<Task> tasks,
 			BigDecimal cost, String observation, PaymentStatus payment, ConfirmationStatus advised, ConfirmationStatus delivered) {
