@@ -13,4 +13,7 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String>{
 	@Query(value = "{'date': ?0, 'time': ?1}", exists = true)
 	Boolean existsByTime(LocalDate date, LocalTime time);
 
+	@Query(value="{'observation': {$regex: ?0}}", delete=true)
+	void deleteAllByObservation(String observation);
+
 }
