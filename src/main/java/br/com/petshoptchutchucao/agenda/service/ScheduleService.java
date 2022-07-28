@@ -128,6 +128,7 @@ public class ScheduleService {
 	}
 	
 	private List<Task> findTasks(List<String> tasksIds, String petId, String customerId) {
+		totalCost = new BigDecimal(0);
 		Pet pet = findPet(petId, customerId);
 		List<Task> tasks = new ArrayList<>();
 		
