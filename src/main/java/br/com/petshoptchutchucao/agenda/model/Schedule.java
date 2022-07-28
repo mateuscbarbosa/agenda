@@ -59,7 +59,22 @@ public class Schedule {
 		this.advised = advised;
 		this.delivered = delivered;
 	}
-
+	
+	public void updateInfo(LocalDate date, LocalTime time, SimplifiedOutputDto customer, Pet pet,
+			List<Task> tasks, BigDecimal cost, String observation, PaymentStatus payment,
+			ConfirmationStatus advised, ConfirmationStatus delivered) {
+				this.date = date;
+				this.time = time;
+				this.customer = customer;
+				this.pet = pet;
+				this.tasks = tasks;
+				this.cost = cost;
+				this.observation = observation;
+				this.payment = payment;
+				this.advised = advised;
+				this.delivered = delivered;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -147,5 +162,5 @@ public class Schedule {
 	public void setDelivered(ConfirmationStatus delivered) {
 		this.delivered = delivered;
 	}
-	
+
 }

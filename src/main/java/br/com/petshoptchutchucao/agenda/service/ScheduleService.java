@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
 import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
@@ -72,7 +73,26 @@ public class ScheduleService {
 		
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
-
+	
+	public ScheduleOutputDto update(ScheduleUpdateForm scheduleUpdate) {
+		Schedule schedule = scheduleRepository.findById(scheduleUpdate.getId()).orElseThrow(() -> new BusinessRulesException("ID da agenda não encontrado."));
+		
+		schedule.updateInfo(scheduleUpdate.getDate(),
+							validateTimeSameSchedule(schedule.getId(), scheduleUpdate.getDate(), scheduleUpdate.getTime()),
+							findCustomer(scheduleUpdate.getCustomerId()),
+							findPet(scheduleUpdate.getPetId(), scheduleUpdate.getCustomerId()),
+							findTasks(scheduleUpdate.getTasksIds(), scheduleUpdate.getPetId(), scheduleUpdate.getCustomerId()),
+							totalCost,
+							scheduleUpdate.getObservation(),
+							scheduleUpdate.getPayment(),
+							scheduleUpdate.getAdvised(),
+							scheduleUpdate.getDelivered());
+		
+		scheduleRepository.save(schedule);
+		
+		return modelMapper.map(schedule, ScheduleOutputDto.class);
+	}
+	
 	private LocalTime validateTime(LocalDate day,LocalTime time) {
 		LocalTime firstCall = LocalTime.of(8, 30);
 		LocalTime lastCall = LocalTime.of(15, 30);
@@ -124,4 +144,15 @@ public class ScheduleService {
 		
 		return tasks;
 	}
+	
+	private LocalTime validateTimeSameSchedule(String id, LocalDate date, LocalTime time) {
+		Schedule schedule = scheduleRepository.findById(id).get();
+		
+		if(!schedule.getDate().equals(date) && !schedule.getTime().equals(time)) {
+			validateTime(date, time);
+		}
+		
+		return time;
+	}
+
 }
