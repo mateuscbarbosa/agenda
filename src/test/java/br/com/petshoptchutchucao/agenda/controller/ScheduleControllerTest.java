@@ -23,8 +23,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
+import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
+import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Gender;
+import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
 import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Schedule;
 import br.com.petshoptchutchucao.agenda.model.Size;
@@ -123,7 +127,7 @@ class ScheduleControllerTest {
 	
 	@Test
 	void couldNotRegisterAScheduleOutOfExpedient() throws Exception{
-		ScheduleFormDto scheduleFormDto = createScheduleForm(LocalDate.of(2022, 07, 28), LocalTime.of(8, 00));
+		ScheduleFormDto scheduleFormDto = createScheduleForm(LocalDate.of(2030, 07, 28), LocalTime.of(8, 00));
 		
 		String json = objectMapper.writeValueAsString(scheduleFormDto);
 		
@@ -137,7 +141,7 @@ class ScheduleControllerTest {
 	
 	@Test
 	void couldNotRegisterAScheduleWithWrongMinutes() throws Exception{
-		ScheduleFormDto scheduleFormDto = createScheduleForm(LocalDate.of(2022, 07, 28), LocalTime.of(10, 47));
+		ScheduleFormDto scheduleFormDto = createScheduleForm(LocalDate.of(2030, 07, 28), LocalTime.of(10, 47));
 		
 		String json = objectMapper.writeValueAsString(scheduleFormDto);
 		
@@ -152,12 +156,12 @@ class ScheduleControllerTest {
 	@Test
 	void couldNotRegisterAScheduleInTheSameTimeWithAnotherSchedule() throws Exception{
 		Schedule schedule = new Schedule();
-		schedule.setDate(LocalDate.of(2022, 07, 28));
+		schedule.setDate(LocalDate.of(2030, 07, 28));
 		schedule.setTime(LocalTime.of(10, 30));
 		schedule.setObservation("Teste");
 		scheduleRepository.save(schedule);
 		
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 28), LocalTime.of(10, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 28), LocalTime.of(10, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		
@@ -166,14 +170,14 @@ class ScheduleControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
-		.andExpect(MockMvcResultMatchers.content().string("Horário informado para o 28/07/2022 já está ocupado."));
+		.andExpect(MockMvcResultMatchers.content().string("Horário informado para o 28/07/2030 já está ocupado."));
 	}
 	
 	@Test
 	void couldNotRegisterAScheduleWithWrongCustomerId() throws Exception{
 		String customerId = this.customer.getId();
 		this.customer.setId("123456");
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 29), LocalTime.of(10, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 29), LocalTime.of(10, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		
@@ -191,7 +195,7 @@ class ScheduleControllerTest {
 	void couldNotRegisterAScheduleWithWrongPetId() throws Exception{
 		String petId = this.pet.getId();
 		this.pet.setId("123456");
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 29), LocalTime.of(10, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 29), LocalTime.of(10, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		
@@ -212,7 +216,7 @@ class ScheduleControllerTest {
 		String customerId = this.customer.getId();
 		this.customer.setId(registred.getId());
 		
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 29), LocalTime.of(10, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 29), LocalTime.of(10, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		
@@ -234,7 +238,7 @@ class ScheduleControllerTest {
 		listTasksString.add(this.task.getId());
 		
 		
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 29), LocalTime.of(10, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 29), LocalTime.of(10, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		
@@ -256,7 +260,7 @@ class ScheduleControllerTest {
 		Task registred = taskRepository.save(task);
 		listTasksString.add(registred.getId());
 		
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 29), LocalTime.of(10, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 29), LocalTime.of(10, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		
@@ -271,19 +275,48 @@ class ScheduleControllerTest {
 	
 	@Test
 	void couldRegisterAScheduleWithAllCorrectData() throws Exception{
-		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2022, 07, 29), LocalTime.of(11, 30));
+		ScheduleFormDto scheduleForm = createScheduleForm(LocalDate.of(2030, 07, 29), LocalTime.of(11, 30));
 		
 		String json = objectMapper.writeValueAsString(scheduleForm);
 		String jsonWanted = "{\"time\":\"11:30:00\",\"customer\":{\"id\":\""+this.customer.getId()+"\",\"name\":\"Cliente Teste\"},"
 							+ "\"pet\":{\"id\":\""+this.pet.getId()+"\",\"name\":\"Pet Teste\",\"spicies\":\"CACHORRO\",\"breed\":\"Vira Lata\"},"
-							+ "\"tasks\":[{\"id\":\""+this.task.getId()+"\",\"name\":\"Teste\",\"price\":100.2999999999999971578290569595992565155029296875}],"
-							+ "\"observation\":\"Teste\",\"cost\":100.2999999999999971578290569595992565155029296875,\"advised\":\"NÃO\",\"delivered\":\"NÃO\",\"payment\":\"PENDENTE\"}";
+							+ "\"tasks\":[{\"id\":\""+this.task.getId()+"\",\"name\":\"Teste\",\"price\":100.3}],"
+							+ "\"observation\":\"Teste\",\"cost\":100.3,\"advised\":\"NÃO\",\"delivered\":\"NÃO\",\"payment\":\"PENDENTE\"}";
 		
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 		.andExpect(MockMvcResultMatchers.status().isCreated())
+		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
+	}
+	
+	@Test
+	void couldUpdateAScheduleWithSameDateTime() throws Exception{
+		List<Task> tasks = new ArrayList<>();
+		tasks.add(task);
+		
+		Schedule schedule = new Schedule(LocalDate.of(2030, 07, 30), LocalTime.of(11, 00),
+										new SimplifiedOutputDto(customer.getId(), customer.getName()),
+										pet, tasks, new BigDecimal(task.getPrice().toString()),"Teste", PaymentStatus.PENDENTE,
+										ConfirmationStatus.NÃO, ConfirmationStatus.NÃO);
+		Schedule registred = scheduleRepository.save(schedule);
+		
+		ScheduleUpdateForm scheduleUpdate = new ScheduleUpdateForm(registred.getId(), registred.getDate(), registred.getTime(),
+																registred.getCustomer().getId(), registred.getPet().getId(), listTasksString,
+																registred.getObservation(), PaymentStatus.PAGO, ConfirmationStatus.SIM, ConfirmationStatus.SIM);
+		
+		String json = objectMapper.writeValueAsString(scheduleUpdate);
+		String jsonWanted = "{\"time\":\"11:00:00\",\"customer\":{\"id\":\""+this.customer.getId()+"\",\"name\":\"Cliente Teste\"},"
+							+ "\"pet\":{\"id\":\""+this.pet.getId()+"\",\"name\":\"Pet Teste\",\"spicies\":\"CACHORRO\",\"breed\":\"Vira Lata\"},"
+							+ "\"tasks\":[{\"id\":\""+this.task.getId()+"\",\"name\":\"Teste\",\"price\":100.3}],"
+							+ "\"observation\":\"Teste\",\"cost\":100.3,\"advised\":\"SIM\",\"delivered\":\"SIM\",\"payment\":\"PAGO\"}";
+		
+		mvc.perform(MockMvcRequestBuilders
+				.put("/schedules")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
 }

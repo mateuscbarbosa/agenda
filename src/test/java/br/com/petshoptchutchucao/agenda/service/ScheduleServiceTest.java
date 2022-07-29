@@ -25,6 +25,7 @@ import org.modelmapper.ModelMapper;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
 import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
@@ -146,6 +147,49 @@ class ScheduleServiceTest {
 		
 		Mockito.verify(scheduleRepository).save(Mockito.any());
 		//Ainda não consegui fazer a verificação de respostas, há alguns erros que não entendo
+	}
+	
+	@Test
+	void couldUpdateAScheduleWithCompleteAndCorrectDate() {
+		Customer customer = new Customer();
+		Pet pet = new Pet();
+		Task task = new Task();
+		task.setPrice(new BigDecimal(10));
+		
+		List<TaskOutputDto> tasksOutput = new ArrayList<>();
+		tasksOutput.add(modelMapper.map(task, TaskOutputDto.class));
+		
+		Schedule schedule = new Schedule("123456s",LocalDate.of(2030, 07, 30), LocalTime.of(11, 00),
+				new SimplifiedOutputDto(customer.getId(), customer.getName()),
+				pet, tasks, new BigDecimal(10),"Teste", PaymentStatus.PENDENTE,
+				ConfirmationStatus.NÃO, ConfirmationStatus.NÃO);
+		
+		ScheduleUpdateForm scheduleUpdate = new ScheduleUpdateForm(schedule.getId(), schedule.getDate(), schedule.getTime(),
+																schedule.getCustomer().getId(), schedule.getPet().getId(),
+																listTasksString, "Atualizada",
+																PaymentStatus.PAGO, ConfirmationStatus.SIM, ConfirmationStatus.SIM);
+		
+		Mockito.when(scheduleRepository.findById(scheduleUpdate.getId())).thenReturn(Optional.of(schedule));
+		Mockito.when(customerRepository.findById(scheduleUpdate.getCustomerId())).thenReturn(Optional.of(customer));
+		Mockito.when(petRepository.findById(scheduleUpdate.getPetId())).thenReturn(Optional.of(pet));
+		Mockito.when(taskRepository.findById(scheduleUpdate.getTasksIds().get(0))).thenReturn(Optional.of(task));
+		
+		/*Mockito.when(modelMapper.map(schedule, ScheduleOutputDto.class)).thenReturn(new ScheduleOutputDto(scheduleUpdate.getId(),
+																										scheduleUpdate.getTime(),
+																										new SimplifiedOutputDto(customer.getId(), customer.getName()),
+																										modelMapper.map(pet, PetOutputDto.class),
+																										tasksOutput,
+																										scheduleUpdate.getObservation(),
+																										schedule.getCost(),
+																										ConfirmationStatus.SIM,
+																										ConfirmationStatus.SIM,
+																										PaymentStatus.PAGO));*/
+		
+		ScheduleOutputDto scheduleDto = service.update(scheduleUpdate);
+		
+		Mockito.verify(scheduleRepository).save(Mockito.any());
+		
+		//assertEquals(scheduleUpdate.getId(), scheduleDto.getId());
 	}
 	
 }
