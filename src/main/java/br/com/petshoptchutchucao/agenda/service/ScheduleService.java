@@ -93,6 +93,12 @@ public class ScheduleService {
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
 	
+	public void delete(String id) {
+		Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new BusinessRulesException("Agendamento não encontrado."));
+		
+		scheduleRepository.delete(schedule);
+	}
+	
 	private LocalTime validateTime(LocalDate day,LocalTime time) {
 		LocalTime firstCall = LocalTime.of(8, 30);
 		LocalTime lastCall = LocalTime.of(15, 30);
