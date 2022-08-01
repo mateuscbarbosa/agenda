@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.petshoptchutchucao.agenda.dto.UserDetaliedOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.UserDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
@@ -60,8 +60,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDetaliedOutputDto> detalis(@PathVariable @NotBlank String id){
-		UserDetaliedOutputDto dto = service.details(id);
+	public ResponseEntity<UserDetailedOutputDto> detalis(@PathVariable @NotBlank String id){
+		UserDetailedOutputDto dto = service.details(id);
 		
 		return ResponseEntity.ok(dto);
 	}

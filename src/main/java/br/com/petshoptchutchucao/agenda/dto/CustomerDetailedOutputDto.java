@@ -4,24 +4,24 @@ import java.util.List;
 
 import br.com.petshoptchutchucao.agenda.model.Status;
 
-public class CustomerDetaliedOutputDto extends CustomerOutputDto{
+public class CustomerDetailedOutputDto extends CustomerOutputDto{
 
-	private List<PetDetaliedOutputDto> pets;
+	private List<PetDetailedOutputDto> pets;
 	private Status status;
 	
-	public CustomerDetaliedOutputDto() {}
+	public CustomerDetailedOutputDto() {}
 	
-	public CustomerDetaliedOutputDto(String id, String name, String address, List<PetDetaliedOutputDto> pets, List<String> contactNumbers, Status status) {
+	public CustomerDetailedOutputDto(String id, String name, String address, List<PetDetailedOutputDto> pets, List<String> contactNumbers, Status status) {
 		super(id, name, address, contactNumbers);
 		this.pets = pets;
 		this.status = status;
 	}
 
-	public List<PetDetaliedOutputDto> getPets() {
+	public List<PetDetailedOutputDto> getPets() {
 		return pets;
 	}
 
-	public void setPets(List<PetDetaliedOutputDto> pets) {
+	public void setPets(List<PetDetailedOutputDto> pets) {
 		this.pets = pets;
 	}
 

@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.petshoptchutchucao.agenda.dto.CustomerDetaliedOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.CustomerDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
-import br.com.petshoptchutchucao.agenda.dto.PetDetaliedOutputDto;
+import br.com.petshoptchutchucao.agenda.dto.PetDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Pet;
@@ -74,20 +74,20 @@ public class CustomerService {
 		customerRepository.save(customer);
 	}
 
-	public CustomerDetaliedOutputDto details(String id) {
+	public CustomerDetailedOutputDto details(String id) {
 		Customer customer = customerRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do Cliente não encontrado."));
 		
-		CustomerDetaliedOutputDto customerDetalied = modelMapper.map(customer, CustomerDetaliedOutputDto.class);
+		CustomerDetailedOutputDto customerDetalied = modelMapper.map(customer, CustomerDetailedOutputDto.class);
 		
 		customerDetalied.setPets(petsDetaileds(customer.getId()));
 		
 		return customerDetalied;
 	}
 	
-	private List<PetDetaliedOutputDto> petsDetaileds(String customerId){
+	private List<PetDetailedOutputDto> petsDetaileds(String customerId){
 		List<Pet> pets = petRepository.findAllbyCustomerId(customerId);
 		
-		return pets.stream().map(p -> modelMapper.map(p, PetDetaliedOutputDto.class))
+		return pets.stream().map(p -> modelMapper.map(p, PetDetailedOutputDto.class))
 							.collect(Collectors.toList());
 	}
 	

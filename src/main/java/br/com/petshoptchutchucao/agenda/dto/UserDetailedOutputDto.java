@@ -5,14 +5,14 @@ import java.util.List;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
 
-public class UserDetaliedOutputDto extends UserOutputDto{
+public class UserDetailedOutputDto extends UserOutputDto{
 
 	private List<Profile> profiles;
 	private Status status;
 	
-	public UserDetaliedOutputDto() {}
+	public UserDetailedOutputDto() {}
 
-	public UserDetaliedOutputDto(String id, String email,  String name, List<Profile> profiles, Status status){
+	public UserDetailedOutputDto(String id, String email,  String name, List<Profile> profiles, Status status){
 		super(id, email, name);
 		this.profiles = profiles;
 		this.status = status;
