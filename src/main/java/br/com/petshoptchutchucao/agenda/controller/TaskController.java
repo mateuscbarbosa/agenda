@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.petshoptchutchucao.agenda.dto.TaskDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
@@ -57,5 +58,12 @@ public class TaskController {
 		service.delete(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<TaskDetailedOutputDto> details(@PathVariable @NotBlank String id){
+		TaskDetailedOutputDto taskDetailed = service.details(id);
+		
+		return ResponseEntity.ok(taskDetailed);
 	}
 }

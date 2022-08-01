@@ -61,7 +61,7 @@ public class ScheduleController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ScheduleOutputDto> details(@PathVariable @NotBlank String id){
+	public ResponseEntity<ScheduleDetailedOutputDto> details(@PathVariable @NotBlank String id){
 		ScheduleDetailedOutputDto scheduleDetailed = service.details(id);
 		
 		return ResponseEntity.ok().body(scheduleDetailed);
