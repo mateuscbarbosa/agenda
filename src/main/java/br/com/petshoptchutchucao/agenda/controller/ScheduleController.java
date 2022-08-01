@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.petshoptchutchucao.agenda.dto.ScheduleDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
@@ -57,5 +58,12 @@ public class ScheduleController {
 		service.delete(id);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ScheduleOutputDto> details(@PathVariable @NotBlank String id){
+		ScheduleDetailedOutputDto scheduleDetailed = service.details(id);
+		
+		return ResponseEntity.ok().body(scheduleDetailed);
 	}
 }

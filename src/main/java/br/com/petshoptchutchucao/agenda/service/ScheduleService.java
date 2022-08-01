@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.petshoptchutchucao.agenda.dto.ScheduleDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
@@ -74,6 +75,7 @@ public class ScheduleService {
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
 	
+	@Transactional
 	public ScheduleOutputDto update(ScheduleUpdateForm scheduleUpdate) {
 		Schedule schedule = scheduleRepository.findById(scheduleUpdate.getId()).orElseThrow(() -> new BusinessRulesException("ID da agenda não encontrado."));
 		
@@ -93,10 +95,17 @@ public class ScheduleService {
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
 	
+	@Transactional
 	public void delete(String id) {
 		Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new BusinessRulesException("Agendamento não encontrado."));
 		
 		scheduleRepository.delete(schedule);
+	}
+	
+	public ScheduleDetailedOutputDto details(String id) {
+		Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new BusinessRulesException("Agendamento não encontrado."));
+		
+		return modelMapper.map(schedule, ScheduleDetailedOutputDto.class);
 	}
 	
 	private LocalTime validateTime(LocalDate day,LocalTime time) {
