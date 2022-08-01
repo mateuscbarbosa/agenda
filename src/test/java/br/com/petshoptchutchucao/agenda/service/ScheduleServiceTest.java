@@ -152,8 +152,17 @@ class ScheduleServiceTest {
 	@Test
 	void couldUpdateAScheduleWithCompleteAndCorrectDate() {
 		Customer customer = new Customer();
+		customer.setId("123456c");
+		customer.setName("Cliente Teste");
 		Pet pet = new Pet();
+		pet.setId("123456p");
+		pet.setCustomerId(customer.getId());
+		pet.setSize(Size.MÉDIO);
+		pet.setSpicies(Spicies.CACHORRO);
 		Task task = new Task();
+		task.setId("123456t");
+		task.setSize(Size.MÉDIO);
+		task.setSpicies(Spicies.CACHORRO);
 		task.setPrice(new BigDecimal(10));
 		
 		List<TaskOutputDto> tasksOutput = new ArrayList<>();
@@ -190,6 +199,23 @@ class ScheduleServiceTest {
 		Mockito.verify(scheduleRepository).save(Mockito.any());
 		
 		//assertEquals(scheduleUpdate.getId(), scheduleDto.getId());
+	}
+	
+	@Test
+	void couldDeleteAScheduleWithCorrectId() {
+		Customer customer = new Customer();
+		Pet pet = new Pet();
+		
+		Schedule schedule = new Schedule("123456s",LocalDate.of(2030, 07, 30), LocalTime.of(11, 00),
+				new SimplifiedOutputDto(customer.getId(), customer.getName()),
+				pet, tasks, new BigDecimal(10),"Teste", PaymentStatus.PENDENTE,
+				ConfirmationStatus.NÃO, ConfirmationStatus.NÃO);
+		
+		Mockito.when(scheduleRepository.findById(schedule.getId())).thenReturn(Optional.of(schedule));
+		
+		service.delete(schedule.getId());
+		
+		Mockito.verify(scheduleRepository).delete(Mockito.any());
 	}
 	
 }

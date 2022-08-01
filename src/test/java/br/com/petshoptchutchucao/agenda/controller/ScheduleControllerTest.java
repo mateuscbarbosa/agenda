@@ -319,4 +319,20 @@ class ScheduleControllerTest {
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
+	
+	@Test
+	void couldDeleteAScheduleWithCorrectId() throws Exception{
+		List<Task> tasks = new ArrayList<>();
+		tasks.add(task);
+		
+		Schedule schedule = new Schedule(LocalDate.of(2030, 8, 01), LocalTime.of(9, 00),
+										new SimplifiedOutputDto(customer.getId(), customer.getName()), pet,
+										tasks, new BigDecimal(task.getPrice().toString()), "Teste", PaymentStatus.PENDENTE,
+										ConfirmationStatus.NÃO, ConfirmationStatus.NÃO);
+		Schedule registred = scheduleRepository.save(schedule);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.delete("/schedules/"+registred.getId()))
+		.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
 }
