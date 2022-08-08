@@ -1,5 +1,7 @@
 package br.com.petshoptchutchucao.agenda.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,7 +15,7 @@ public interface UserRepository extends MongoRepository<User, String>{
 	Page<User> findAll(Pageable pageable);
 	
 	@Query("{'email': ?0}")
-	User findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 	@Query(value = "{'email': {$regex: ?0}}", delete = true)
 	void deleteAllByEmail(String email);

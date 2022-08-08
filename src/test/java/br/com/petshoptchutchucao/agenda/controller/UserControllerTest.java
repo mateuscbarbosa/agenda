@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.User;
@@ -55,7 +56,7 @@ public class UserControllerTest {
 		User newUser = new User(email, "Teste Controller", profilesList, Status.ATIVO);
 		userRepository.save(newUser);
 		
-		User registred = userRepository.findByEmail(newUser.getEmail());
+		User registred = userRepository.findByEmail(newUser.getEmail()).orElseThrow(() -> new BusinessRulesException("Usuário não encontrado."));
 		
 		return registred;
 	}

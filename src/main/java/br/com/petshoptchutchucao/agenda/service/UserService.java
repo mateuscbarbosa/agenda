@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,9 @@ public class UserService {
 	private ModelMapper modelMapper;
 	
 	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
@@ -45,7 +49,7 @@ public class UserService {
 	public UserOutputDto register(UserFormDto userForm) {
 		
 		User user = modelMapper.map(userForm, User.class);
-		user.setPassword(new PasswordGeneratorPassay().generatePassword());
+		user.setPassword(bCryptPasswordEncoder.encode(new PasswordGeneratorPassay().generatePassword()));
 		
 
 		user.setProfiles(findProfiles(userForm.getProfiles()));
