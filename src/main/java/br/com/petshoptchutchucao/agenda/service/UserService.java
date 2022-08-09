@@ -8,6 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +28,7 @@ import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -119,6 +122,11 @@ public class UserService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuário inválido."));
 	}
 
 }
