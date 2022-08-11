@@ -1,4 +1,4 @@
-/*package br.com.petshoptchutchucao.agenda.infra.security;
+package br.com.petshoptchutchucao.agenda.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +15,7 @@ import br.com.petshoptchutchucao.agenda.dto.LoginFormDto;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService{
+public class AuthenticationService implements UserDetailsService{
 
 	@Autowired
 	private UserRepository userRepository;
@@ -47,4 +47,3 @@ public class CustomUserDetailsService implements UserDetailsService{
 	}
 
 }
-*/

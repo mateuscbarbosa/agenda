@@ -1,16 +1,14 @@
 package br.com.petshoptchutchucao.agenda.infra.security;
 
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import br.com.petshoptchutchucao.agenda.dto.LoginFormDto;
-import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,26 +17,44 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class TokenService {
 	
-	@Autowired
-	private UserService userService;
+	@Value("${jjwt.secret}")
+	private String secret;
 	
-	private final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+	private SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 	
-	public String generateToken(LoginFormDto loginForm) {
-		User loged = (User) userService.loadUserByUsername(loginForm.getEmail());
-		
-		Claims claims = Jwts.claims().setSubject(loginForm.getEmail());
-		
-		ArrayList<String> profilesList = new ArrayList<>();
-		
-		for(Profile profile : loged.getProfiles()) {
-			profilesList.add(profile.getDescription());
-		}
+	public String generateToken(Authentication authentication) {
+		User loged = (User) authentication.getPrincipal();
 		
 		return Jwts
 				.builder()
-				.setId(loged.getId())
-				.signWith(key)
+				.setSubject(loged.getId())
+				.signWith(key, SignatureAlgorithm.HS256)
 				.compact();
 	}
+	
+	public boolean tokenValid(String token) {
+		try {
+			Jwts
+				.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token);
+			return true;
+		}
+		catch(Exception e) {
+			return false;
+		}
+	}
+	
+	public String extractUserId(String token) {
+		Claims claims = Jwts
+							.parserBuilder()
+							.setSigningKey(key)
+							.build()
+							.parseClaimsJws(token)
+							.getBody();
+		
+		return claims.getSubject().toString();
+	}
+	
 }

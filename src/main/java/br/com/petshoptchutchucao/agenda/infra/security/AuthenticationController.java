@@ -16,10 +16,10 @@ import br.com.petshoptchutchucao.agenda.dto.TokenOutputDto;
 public class AuthenticationController {
 
 	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
+	private AuthenticationService authenticationService;
 	
 	@PostMapping
 	public TokenOutputDto authenticate(@RequestBody @Valid LoginFormDto loginForm) {
-		return new TokenOutputDto(customUserDetailsService.authenticate(loginForm));
+		return new TokenOutputDto(authenticationService.authenticate(loginForm));
 	}
 }

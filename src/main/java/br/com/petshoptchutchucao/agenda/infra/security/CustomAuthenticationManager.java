@@ -1,4 +1,4 @@
-package br.com.petshoptchutchucao.agenda.infra.security;
+/*package br.com.petshoptchutchucao.agenda.infra.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,10 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import br.com.petshoptchutchucao.agenda.service.UserService;
 
-
+@Component
 public class CustomAuthenticationManager implements AuthenticationManager{
 	
 	@Autowired
@@ -27,7 +28,7 @@ public class CustomAuthenticationManager implements AuthenticationManager{
 		if(!bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
 			throw new BadCredentialsException("Erro!");
 		}
-		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
 	}
 
-}
+}*/
