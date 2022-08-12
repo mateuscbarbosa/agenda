@@ -20,15 +20,13 @@ public class TokenService {
 	@Value("${jjwt.secret}")
 	private String secret;
 	
-	private SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-	
 	public String generateToken(Authentication authentication) {
 		User loged = (User) authentication.getPrincipal();
 		
 		return Jwts
 				.builder()
 				.setSubject(loged.getId())
-				.signWith(key, SignatureAlgorithm.HS256)
+				.signWith(testeDeChave(secret), SignatureAlgorithm.HS256)
 				.compact();
 	}
 	
@@ -36,7 +34,7 @@ public class TokenService {
 		try {
 			Jwts
 				.parserBuilder()
-				.setSigningKey(key)
+				.setSigningKey(testeDeChave(secret))
 				.build()
 				.parseClaimsJws(token);
 			return true;
@@ -49,7 +47,7 @@ public class TokenService {
 	public String extractUserId(String token) {
 		Claims claims = Jwts
 							.parserBuilder()
-							.setSigningKey(key)
+							.setSigningKey(testeDeChave(secret))
 							.build()
 							.parseClaimsJws(token)
 							.getBody();
@@ -57,4 +55,7 @@ public class TokenService {
 		return claims.getSubject().toString();
 	}
 	
+	private SecretKey testeDeChave(String secret) {
+		return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+	}
 }
