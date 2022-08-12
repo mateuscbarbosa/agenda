@@ -42,7 +42,7 @@ public class TokenFilterVerification extends OncePerRequestFilter {
 		if(tokenValid) {
 			String userId = tokenService.extractUserId(token);
 			User loged = userRepository.findById(userId).get();
-			Authentication authentication = new UsernamePasswordAuthenticationToken(loged, null, loged.getAuthorities());
+			Authentication authentication = new UsernamePasswordAuthenticationToken(loged.getEmail(), loged.getPassword(), loged.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		

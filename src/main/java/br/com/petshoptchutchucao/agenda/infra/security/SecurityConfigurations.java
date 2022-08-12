@@ -3,7 +3,6 @@ package br.com.petshoptchutchucao.agenda.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -30,14 +29,15 @@ public class SecurityConfigurations {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-		httpSecurity.csrf().disable()
-					.sessionManagement()
+		httpSecurity.csrf().disable()			
+					.authorizeHttpRequests()
+					.antMatchers("/auth").permitAll()
+					.antMatchers(HttpMethod.GET,"/users").hasRole("RUSER")
+					.antMatchers("/users").hasRole("ADMIN")
+					.anyRequest().authenticated()
+					.and().sessionManagement()
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-					.and().authorizeHttpRequests()
-					.antMatchers(HttpMethod.POST, "/auth").permitAll()
-					.antMatchers("/**").hasRole("ADMIN")
-					.anyRequest().authenticated();
-		httpSecurity.addFilterBefore(new TokenFilterVerification(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
+					.and().addFilterBefore(new TokenFilterVerification(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 		
 		return httpSecurity.build();
 	}
