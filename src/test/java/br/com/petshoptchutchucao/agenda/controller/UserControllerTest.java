@@ -31,7 +31,7 @@ import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserControllerTest {
+class UserControllerTest {
 	
 	@Autowired
 	private MockMvc mvc;
