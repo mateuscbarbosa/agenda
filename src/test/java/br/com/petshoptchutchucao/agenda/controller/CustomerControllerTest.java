@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,9 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
 import br.com.petshoptchutchucao.agenda.model.Customer;
+import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
+import br.com.petshoptchutchucao.agenda.model.User;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
+import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -40,16 +47,58 @@ class CustomerControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@Autowired
+	private ProfileRepository profileRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private TokenService tokenService;
+	
 	private List<String> contactNumbers = new ArrayList<>();
+	private String token;
 
 	@BeforeAll
 	void insertContactNumber() {
 		contactNumbers.add("00 00000-0000");
 	}
 	
+	@BeforeAll
+	void generateUserToken() {
+		Profile admin = profileRepository.getById(0).get();
+		List<Profile> profilesList = new ArrayList<>();
+		profilesList.add(admin);
+		User loged = new User("teste@admin.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		this.token=tokenService.generateToken(authentication);
+	}
+	
 	@AfterAll
 	void deleteAllCustomersTest() {
 		customerRepository.deleteAllByName("Teste");
+		userRepository.deleteAllByEmail("teste");
+	}
+	
+	@Test
+	void couldNotPermitAnyInterationWithIncorrectUserPermition() throws Exception{
+		Profile admin = profileRepository.getById(60).get();
+		List<Profile> profilesList = new ArrayList<>();
+		profilesList.add(admin);
+		User loged = new User("teste@adminn.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		String token=tokenService.generateToken(authentication);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.get("/customers")
+				.header("Authorization", "Bearer "+token))
+			.andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 	
 	@Test
@@ -59,7 +108,8 @@ class CustomerControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/customers")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -73,7 +123,8 @@ class CustomerControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/customers")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isCreated())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));		
 	}
@@ -87,7 +138,8 @@ class CustomerControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/customers")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -106,7 +158,8 @@ class CustomerControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/customers")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 		
@@ -117,7 +170,8 @@ class CustomerControllerTest {
 		Customer customer = createCustomerInBD("Cliente I Teste");
 		
 		mvc.perform(MockMvcRequestBuilders
-				.delete("/customers/"+customer.getId()))
+				.delete("/customers/"+customer.getId())
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
