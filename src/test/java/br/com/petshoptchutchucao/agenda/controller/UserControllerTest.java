@@ -56,19 +56,6 @@ class UserControllerTest {
 	private List<Profile> profilesList = new ArrayList<>();
 	private String token;
 	
-	private User createNewUserInBD(String email) {
-		profilesVetor[0]=0;
-		Profile profile = profileRepository.getById(profilesVetor[0]).get();
-		profilesList.add(profile);
-		
-		User newUser = new User(email, "Teste Controller", profilesList, Status.ATIVO);
-		userRepository.save(newUser);
-		
-		User registred = userRepository.findByEmail(newUser.getEmail()).orElseThrow(() -> new BusinessRulesException("Usuário não encontrado."));
-		
-		return registred;
-	}
-	
 	@BeforeAll
 	private void generateToken() {
 		Profile admin = profileRepository.getById(0).get();
@@ -80,6 +67,11 @@ class UserControllerTest {
 		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
 		this.token = tokenService.generateToken(authentication);
 		profilesList.clear();
+	}
+	
+	@BeforeAll
+	private void generateGenericUserInBD() {
+		createNewUserInBD("testee@email.com.br");
 	}
 	
 	@AfterAll
@@ -135,7 +127,6 @@ class UserControllerTest {
 	@Test
 	void couldNotRegisterUserWithANonUniqueEmail() throws Exception {
 		profilesVetor[0] = 10;
-		User newUser = createNewUserInBD("testee@email.com.br");
 		
 		UserFormDto userForm = new UserFormDto("testee@email.com.br","Teste",profilesVetor);
 		
@@ -192,11 +183,10 @@ class UserControllerTest {
 	void couldNotUpdateUserWithDifferentEmailAlreadyExistent() throws Exception {
 		profilesVetor[0] = 10;
 		
-		User userWithEmail = createNewUserInBD("testeO@email.com.br");
 		User user = createNewUserInBD("testeU@email.com.br");
 		
 		UserUpdateFormDto userUpdate = new UserUpdateFormDto(user.getId(),
-															"testeO@email.com",
+															"testee@email.com",
 															user.getName(),
 															profilesVetor,
 															user.getStatus(),
@@ -245,5 +235,18 @@ class UserControllerTest {
 				.delete("/users/"+user.getId())
 				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
+	
+	private User createNewUserInBD(String email) {
+		profilesVetor[0]=0;
+		Profile profile = profileRepository.getById(profilesVetor[0]).get();
+		profilesList.add(profile);
+		
+		User newUser = new User(email, "Teste Controller", profilesList, Status.ATIVO);
+		userRepository.save(newUser);
+		
+		User registred = userRepository.findByEmail(newUser.getEmail()).orElseThrow(() -> new BusinessRulesException("Usuário não encontrado."));
+		
+		return registred;
 	}
 }
