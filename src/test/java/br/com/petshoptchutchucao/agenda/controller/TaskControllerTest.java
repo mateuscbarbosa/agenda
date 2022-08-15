@@ -1,8 +1,11 @@
 package br.com.petshoptchutchucao.agenda.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,10 +24,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
+import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Size;
 import br.com.petshoptchutchucao.agenda.model.Spicies;
+import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.Task;
+import br.com.petshoptchutchucao.agenda.model.User;
+import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -39,9 +50,54 @@ class TaskControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@Autowired
+	private ProfileRepository profileRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private TokenService tokenService;
+	
+	private String token ;
+	
+	@BeforeAll
+	void generateToken() {
+		Profile admin = profileRepository.getById(0).get();
+		List<Profile> profilesList = new ArrayList<>();
+		profilesList.add(admin);
+		
+		User loged = new User("teste@admin.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		this.token = tokenService.generateToken(authentication);
+	}
+	
 	@AfterAll
 	void deteleAllTasksTest() {
 		taskRepository.deleteAllByName("TESTE");
+		userRepository.deleteAllByEmail("teste");
+	}
+	
+	@Test
+	void couldNotPermitAnyInteractionWithWrongUserPermition() throws Exception{
+		Profile admin = profileRepository.getById(60).get();
+		List<Profile> profilesList = new ArrayList<>();
+		profilesList.add(admin);
+		
+		User loged = new User("teste@admin.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		String token = tokenService.generateToken(authentication);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.get("/tasks")
+				.header("Authorization", "Bearer " + token))
+			.andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 	
 	@Test
@@ -51,7 +107,8 @@ class TaskControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/tasks")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -65,7 +122,8 @@ class TaskControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/tasks")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isCreated())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
@@ -79,7 +137,8 @@ class TaskControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/tasks")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -95,7 +154,8 @@ class TaskControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/tasks")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
@@ -105,7 +165,8 @@ class TaskControllerTest {
 		Task task = createTaskInBD("Serviçooo Teste");
 		
 		mvc.perform(MockMvcRequestBuilders
-				.delete("/tasks/" + task.getId()))
+				.delete("/tasks/" + task.getId())
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 
