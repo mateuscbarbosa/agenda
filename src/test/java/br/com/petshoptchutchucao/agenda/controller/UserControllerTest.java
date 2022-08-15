@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
+import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.User;
@@ -45,8 +49,12 @@ class UserControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@Autowired
+	private TokenService tokenService;
+	
 	private Integer profilesVetor[] = new Integer[1];
 	private List<Profile> profilesList = new ArrayList<>();
+	private String token;
 	
 	private User createNewUserInBD(String email) {
 		profilesVetor[0]=0;
@@ -61,9 +69,40 @@ class UserControllerTest {
 		return registred;
 	}
 	
+	@BeforeAll
+	private void generateToken() {
+		Profile admin = profileRepository.getById(0).get();
+		profilesList.add(admin);
+		User loged = new User("teste@admin.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		this.token = tokenService.generateToken(authentication);
+		profilesList.clear();
+	}
+	
 	@AfterAll
 	public void removeTestsUsers() {
 		userRepository.deleteAllByEmail("teste");
+	}
+	
+	@Test
+	void couldNotPermitAnyInterationWithIncorrectUserPermition() throws Exception{
+		profilesList.clear();
+		Profile admin = profileRepository.getById(11).get();
+		profilesList.add(admin);
+		User loged = new User("teste@adminn.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		String token = tokenService.generateToken(authentication);
+		profilesList.clear();
+		
+		mvc.perform(MockMvcRequestBuilders
+				.get("/users")
+				.header("Authorization", "Bearer " + token))
+			.andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 	
 	@Test
@@ -73,7 +112,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -87,7 +127,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -103,7 +144,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 					.post("/users")
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(json))
+					.content(json)
+					.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -118,7 +160,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isCreated())
 			.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
@@ -139,7 +182,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 		
 	}
@@ -163,7 +207,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -185,7 +230,8 @@ class UserControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
@@ -196,7 +242,8 @@ class UserControllerTest {
 		
 		
 		mvc.perform(MockMvcRequestBuilders
-				.delete("/users/"+user.getId()))
+				.delete("/users/"+user.getId())
+				.header("Authorization", "Bearer " + token))
 			.andExpect(MockMvcResultMatchers.status().isNoContent());
 	}
 }

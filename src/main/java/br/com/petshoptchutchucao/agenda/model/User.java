@@ -29,6 +29,14 @@ public class User implements UserDetails{
 		this.status = status;
 	}
 
+	public User(String email, String password, String name, List<Profile> profiles, Status status) {
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.profiles = profiles;
+		this.status = status;
+	}
+
 	public User(String id, String email, String password, String name, List<Profile> profiles, Status status) {
 		this.id = id;
 		this.email = email;
