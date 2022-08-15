@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -25,20 +27,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
 import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
 import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Gender;
 import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
 import br.com.petshoptchutchucao.agenda.model.Pet;
+import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Schedule;
 import br.com.petshoptchutchucao.agenda.model.Size;
 import br.com.petshoptchutchucao.agenda.model.Spicies;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.Task;
+import br.com.petshoptchutchucao.agenda.model.User;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
 import br.com.petshoptchutchucao.agenda.repository.PetRepository;
+import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.ScheduleRepository;
 import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -64,10 +71,33 @@ class ScheduleControllerTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 	
+	@Autowired
+	private ProfileRepository profileRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private TokenService tokenService;
+	
 	private Customer customer;
 	private Pet pet;
 	private Task task;
 	private List<String> listTasksString = new ArrayList<>();
+	private String token;
+	
+	@BeforeAll
+	void generateToken() {
+		Profile admin = profileRepository.getById(0).get();
+		List<Profile> profilesList = new ArrayList<>();
+		profilesList.add(admin);
+		User loged = new User("teste@admin.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(admin);
+		userRepository.save(loged);
+		
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		this.token = tokenService.generateToken(authentication);
+	}
 	
 	@BeforeAll
 	void createCustomerPetTaskInBD() {
@@ -88,17 +118,26 @@ class ScheduleControllerTest {
 		customerRepository.deleteAllByName("Teste");
 		petRepository.deleteAllByName("Teste");
 		taskRepository.deleteAllByName("Teste");
+		userRepository.deleteAllByEmail("teste");
 	}
 	
-	private ScheduleFormDto createScheduleForm(LocalDate date, LocalTime time) {
-		ScheduleFormDto scheduleForm = new ScheduleFormDto(date,
-														time,
-														customer.getId(),
-														pet.getId(),
-														listTasksString,
-														"Teste");
+	@Test
+	void couldNotPermitAnyInteractionWithWrongUserPermitions() throws Exception{
+		Profile profile = profileRepository.getById(60).get();
+		List<Profile> profilesList = new ArrayList<>();
+		profilesList.add(profile);
+		User loged = new User("teste@admin.com.br","123456","Teste", profilesList, Status.ATIVO);
+		loged.addProfile(profile);
+		userRepository.save(loged);
 		
-		return scheduleForm;
+		Authentication authentication = new UsernamePasswordAuthenticationToken(loged, loged.getEmail());
+		String token = tokenService.generateToken(authentication);
+		
+		mvc.perform(MockMvcRequestBuilders
+				.get("/schedules")
+				.header("Authorization", "Bearer " + token))
+			.andExpect(MockMvcResultMatchers.status().isForbidden());
+		
 	}
 	
 	@Test
@@ -108,7 +147,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -121,7 +161,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest());
 	}
 	
@@ -134,7 +175,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Horário informado está fora do expediente de atendimento."));
 	}
@@ -148,7 +190,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Horário informado está fora do intervalo correto."));
 	}
@@ -168,7 +211,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Horário informado para o 28/07/2030 já está ocupado."));
 	}
@@ -184,7 +228,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Cliente não encontrado."));
 		
@@ -202,7 +247,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Pet não encontrado."));
 		
@@ -223,7 +269,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Registro de Pet diferente do Dono."));
 		
@@ -245,7 +292,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Serviço não encontrado."));
 		
@@ -267,7 +315,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isBadRequest())
 		.andExpect(MockMvcResultMatchers.content().string("Serviço selecionado não corresponde ao pet informado."));
 		listTasksString.remove(1);
@@ -286,7 +335,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.post("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isCreated())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
@@ -315,7 +365,8 @@ class ScheduleControllerTest {
 		mvc.perform(MockMvcRequestBuilders
 				.put("/schedules")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+				.content(json)
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.content().json(jsonWanted));
 	}
@@ -332,7 +383,19 @@ class ScheduleControllerTest {
 		Schedule registred = scheduleRepository.save(schedule);
 		
 		mvc.perform(MockMvcRequestBuilders
-				.delete("/schedules/"+registred.getId()))
+				.delete("/schedules/"+registred.getId())
+				.header("Authorization", "Bearer " + token))
 		.andExpect(MockMvcResultMatchers.status().isNoContent());
+	}
+	
+	private ScheduleFormDto createScheduleForm(LocalDate date, LocalTime time) {
+		ScheduleFormDto scheduleForm = new ScheduleFormDto(date,
+														time,
+														customer.getId(),
+														pet.getId(),
+														listTasksString,
+														"Teste");
+		
+		return scheduleForm;
 	}
 }
