@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class TaskController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<TaskOutputDto> register(@RequestBody @Valid TaskFormDto taskForm, UriComponentsBuilder uriBuilder){
-		TaskOutputDto taskDto = service.register(taskForm);
+	public ResponseEntity<TaskOutputDto> register(@RequestBody @Valid TaskFormDto taskForm, UriComponentsBuilder uriBuilder, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		TaskOutputDto taskDto = service.register(taskForm, authentication);
 		
 		URI uri = uriBuilder.path("/tasks/{id}").buildAndExpand(taskDto.getId()).toUri();
 		
@@ -47,15 +49,15 @@ public class TaskController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<TaskOutputDto> update(@RequestBody @Valid TaskUpdateFormDto taskUpdate){
-		TaskOutputDto taskDto = service.update(taskUpdate);
+	public ResponseEntity<TaskOutputDto> update(@RequestBody @Valid TaskUpdateFormDto taskUpdate, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		TaskOutputDto taskDto = service.update(taskUpdate, authentication);
 		
 		return ResponseEntity.ok(taskDto);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<TaskOutputDto> delete(@PathVariable @NotBlank String id){
-		service.delete(id);
+	public ResponseEntity<TaskOutputDto> delete(@PathVariable @NotBlank String id, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		service.delete(id, authentication);
 		
 		return ResponseEntity.noContent().build();
 	}
