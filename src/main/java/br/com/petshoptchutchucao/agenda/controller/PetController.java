@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class PetController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PetOutputDto> register (@RequestBody @Valid PetFormDto petForm, UriComponentsBuilder uriBuilder){
-		PetOutputDto petOutput = service.register(petForm);
+	public ResponseEntity<PetOutputDto> register (@RequestBody @Valid PetFormDto petForm, UriComponentsBuilder uriBuilder, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		PetOutputDto petOutput = service.register(petForm, authentication);
 		
 		URI uri = uriBuilder.path("/pets/{id}").buildAndExpand(petOutput.getId()).toUri();
 		
@@ -47,15 +49,15 @@ public class PetController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<PetOutputDto> update(@RequestBody @Valid PetUpdateFormDto petUpdate){
-		PetOutputDto petOutput = service.update(petUpdate);
+	public ResponseEntity<PetOutputDto> update(@RequestBody @Valid PetUpdateFormDto petUpdate, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		PetOutputDto petOutput = service.update(petUpdate, authentication);
 		
 		return ResponseEntity.ok(petOutput);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<PetOutputDto> delete(@PathVariable @NotBlank String id){
-		service.delete(id);
+	public ResponseEntity<PetOutputDto> delete(@PathVariable @NotBlank String id, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		service.delete(id, authentication);
 		
 		return ResponseEntity.noContent().build();
 	}

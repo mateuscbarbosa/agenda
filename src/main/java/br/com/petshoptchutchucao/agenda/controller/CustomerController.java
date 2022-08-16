@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class CustomerController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<CustomerOutputDto> register (@RequestBody @Valid CustomerFormDto customerForm, UriComponentsBuilder uriBuilder){
-		CustomerOutputDto dto = service.register(customerForm);
+	public ResponseEntity<CustomerOutputDto> register (@RequestBody @Valid CustomerFormDto customerForm, UriComponentsBuilder uriBuilder, @CurrentSecurityContext(expression="authentication") Authentication authentication){
+		CustomerOutputDto dto = service.register(customerForm, authentication);
 		
 		URI uri = uriBuilder.path("/customers/{id}").buildAndExpand(dto.getId()).toUri();
 		
@@ -47,15 +49,15 @@ public class CustomerController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<CustomerOutputDto> update (@RequestBody @Valid CustomerUpdateFormDto customerForm){
-		CustomerOutputDto customerOutput = service.update(customerForm);
+	public ResponseEntity<CustomerOutputDto> update (@RequestBody @Valid CustomerUpdateFormDto customerForm, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		CustomerOutputDto customerOutput = service.update(customerForm, authentication);
 		
 		return ResponseEntity.ok(customerOutput);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<CustomerOutputDto> inactivate(@PathVariable @NotBlank String id){
-		service.inactivate(id);
+	public ResponseEntity<CustomerOutputDto> inactivate(@PathVariable @NotBlank String id, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		service.inactivate(id, authentication);
 		
 		return ResponseEntity.noContent().build();
 	}
