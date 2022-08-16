@@ -1,7 +1,5 @@
 package br.com.petshoptchutchucao.agenda.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
@@ -26,11 +23,9 @@ import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.infra.PasswordGeneratorPassay;
 import br.com.petshoptchutchucao.agenda.model.Activity;
-import br.com.petshoptchutchucao.agenda.model.Logs;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.LogsRepository;
 import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
@@ -50,7 +45,7 @@ public class UserService implements UserDetailsService{
 	private ProfileRepository profileRepository;
 	
 	@Autowired
-	private LogsRepository logsRepository;
+	private LogsService logsService;
 	
 	public Page<UserOutputDto> list(Pageable pagination){
 		
@@ -72,23 +67,36 @@ public class UserService implements UserDetailsService{
 		}
 		userRepository.save(user);
 		
-		Logs log = new Logs(LocalDateTime.now(), loadCurrentUser(authentication), Activity.REGISTRO,"Novo Usuário: "+user.getName()+" E-mail: "+user.getEmail());
-		System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
-		logsRepository.save(log);
+		logsService.registerLog(authentication, Activity.REGISTRO, "Novo Usuário: "+user.getName()+" E-mail: "+user.getEmail());
 				
 		return modelMapper.map(user, UserOutputDto.class);
 	}
 
 	@Transactional
-	public UserOutputDto update(UserUpdateFormDto userForm) {
+	public UserOutputDto update(UserUpdateFormDto userForm, Authentication authentication) {
 		User user = userRepository.findById(userForm.getId()).orElseThrow(() -> new BusinessRulesException("ID do usuário não encontrado."));
+		List<String> profilesDescription = new ArrayList<>(); 
+		user.getProfiles().stream().forEach(p -> profilesDescription.add(p.getDescription()));
+		
+		String oldUser = String.format("Usuário: %s"
+									+ " E-mail: %s"
+									+ " Perfils: %s"
+									+ " Status: %s", user.getName(), user.getEmail(), profilesDescription, user.getStatus().toString());
+		String newUser;
 		
 		if(user.getEmail().equals(userForm.getEmail()) || !verifyUniqueUserEmail(userForm.getEmail())) {
 			user.updateInfo(userForm.getEmail(),
 					userForm.getName(),
-					userForm.getPassword(),
+					bCryptPasswordEncoder.encode(userForm.getPassword()),
 					findProfiles(userForm.getProfiles()),
 					userForm.getStatus());
+			
+			profilesDescription.clear();
+			user.getProfiles().stream().forEach(p -> profilesDescription.add(p.getDescription()));
+			newUser = String.format(" Usuário: %s"
+										+ " E-mail: %s"
+										+ " Perfils: %s"
+										+ " Status: %s", user.getName(), user.getEmail(), profilesDescription, user.getStatus().toString());
 		}
 		else {
 			throw new BusinessRulesException("E-mail já está cadastrado no banco para outro usuário.");
@@ -96,16 +104,20 @@ public class UserService implements UserDetailsService{
 		
 		userRepository.save(user);
 		
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldUser + " //PARA// " + newUser);
+		
 		return modelMapper.map(user, UserOutputDto.class);
 	}
 	
 	@Transactional
-	public void inactivate(String id) {
+	public void inactivate(String id, Authentication authentication) {
 		User user = userRepository.findById(id).orElseThrow(() -> new BusinessRulesException("ID do usuário não encontrado."));
 		
 		user.setStatus(Status.INATIVO);
 		
 		userRepository.save(user);
+		
+		logsService.registerLog(authentication, Activity.INATIVAÇÃO, "Usuário: "+user.getName());
 	}
 
 	@Transactional
@@ -143,11 +155,4 @@ public class UserService implements UserDetailsService{
 		return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuário inválido."));
 	}
 	
-	private SimplifiedOutputDto loadCurrentUser(Authentication authentication) {
-		User user = (User) loadUserByUsername(authentication.getName());
-		SimplifiedOutputDto userSimplified = new SimplifiedOutputDto(user.getId(), user.getName());
-		
-		return userSimplified;
-	}
-
 }

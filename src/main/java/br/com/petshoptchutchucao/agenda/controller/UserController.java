@@ -48,15 +48,15 @@ public class UserController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<UserOutputDto> update(@RequestBody @Valid UserUpdateFormDto userForm){
-		UserOutputDto userOutput = service.update(userForm);
+	public ResponseEntity<UserOutputDto> update(@RequestBody @Valid UserUpdateFormDto userForm, @CurrentSecurityContext(expression="authentication") Authentication authentication){
+		UserOutputDto userOutput = service.update(userForm, authentication);
 		
 		return ResponseEntity.ok(userOutput);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<UserOutputDto> remove(@PathVariable @NotBlank String id){
-		service.inactivate(id);
+	public ResponseEntity<UserOutputDto> remove(@PathVariable @NotBlank String id, @CurrentSecurityContext(expression="authentication") Authentication authentication){
+		service.inactivate(id, authentication);
 		
 		return ResponseEntity.noContent().build();
 	}
