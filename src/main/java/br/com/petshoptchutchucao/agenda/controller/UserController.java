@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,9 +40,9 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserOutputDto> register(@RequestBody @Valid UserFormDto userForm, UriComponentsBuilder uriBuilder){
-		UserOutputDto dto = service.register(userForm);
-		
+	public ResponseEntity<UserOutputDto> register(@RequestBody @Valid UserFormDto userForm, UriComponentsBuilder uriBuilder, @CurrentSecurityContext(expression="authentication") Authentication authentication){
+		UserOutputDto dto = service.register(userForm, authentication);
+
 		URI uri = uriBuilder.path("/users/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}

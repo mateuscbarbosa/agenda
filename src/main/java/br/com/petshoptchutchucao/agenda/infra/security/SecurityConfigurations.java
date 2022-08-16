@@ -53,6 +53,7 @@ public class SecurityConfigurations {
 					.antMatchers(HttpMethod.PUT,"/schedules").hasAnyRole("USCHEDULE","ADMIN")
 					.antMatchers(HttpMethod.DELETE,"/schedules").hasAnyRole("DSCHEDULE","ADMIN")
 					.antMatchers(HttpMethod.GET,"/reports").hasAnyRole("RREPORTS","ADMIN")
+					.antMatchers(HttpMethod.GET,"/reports/**").hasRole("ADMIN")
 					.anyRequest().authenticated()
 					.and().sessionManagement()
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

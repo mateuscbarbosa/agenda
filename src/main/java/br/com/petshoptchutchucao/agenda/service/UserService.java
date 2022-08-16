@@ -1,5 +1,7 @@
 package br.com.petshoptchutchucao.agenda.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,15 +18,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserDetailedOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
 import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.infra.PasswordGeneratorPassay;
+import br.com.petshoptchutchucao.agenda.model.Activity;
+import br.com.petshoptchutchucao.agenda.model.Logs;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
 import br.com.petshoptchutchucao.agenda.model.User;
+import br.com.petshoptchutchucao.agenda.repository.LogsRepository;
 import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
@@ -42,6 +49,9 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	private ProfileRepository profileRepository;
 	
+	@Autowired
+	private LogsRepository logsRepository;
+	
 	public Page<UserOutputDto> list(Pageable pagination){
 		
 		Page<User> users = userRepository.findAll(pagination);
@@ -49,7 +59,7 @@ public class UserService implements UserDetailsService{
 	}
 
 	@Transactional
-	public UserOutputDto register(UserFormDto userForm) {
+	public UserOutputDto register(UserFormDto userForm, Authentication authentication) {
 		
 		User user = modelMapper.map(userForm, User.class);
 		user.setPassword(bCryptPasswordEncoder.encode(new PasswordGeneratorPassay().generatePassword()));
@@ -61,6 +71,10 @@ public class UserService implements UserDetailsService{
 			throw new BusinessRulesException("E-mail já está cadastrado no banco.");
 		}
 		userRepository.save(user);
+		
+		Logs log = new Logs(LocalDateTime.now(), loadCurrentUser(authentication), Activity.REGISTRO,"Novo Usuário: "+user.getName()+" E-mail: "+user.getEmail());
+		System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+		logsRepository.save(log);
 				
 		return modelMapper.map(user, UserOutputDto.class);
 	}
@@ -127,6 +141,13 @@ public class UserService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Usuário inválido."));
+	}
+	
+	private SimplifiedOutputDto loadCurrentUser(Authentication authentication) {
+		User user = (User) loadUserByUsername(authentication.getName());
+		SimplifiedOutputDto userSimplified = new SimplifiedOutputDto(user.getId(), user.getName());
+		
+		return userSimplified;
 	}
 
 }
