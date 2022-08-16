@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
 import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
+import br.com.petshoptchutchucao.agenda.model.Activity;
 import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
@@ -49,6 +51,9 @@ public class ScheduleService {
 	@Autowired
 	private TaskRepository taskRepository;
 	
+	@Autowired
+	private LogsService logsService;
+	
 	private BigDecimal totalCost = new BigDecimal(0);
 	
 	public Page<ScheduleOutputDto> list(Pageable pagination) {
@@ -57,7 +62,7 @@ public class ScheduleService {
 	}
 
 	@Transactional
-	public ScheduleOutputDto register(ScheduleFormDto scheduleForm) {
+	public ScheduleOutputDto register(ScheduleFormDto scheduleForm, Authentication authentication) {
 		Schedule schedule = new Schedule();
 		schedule.setDate(scheduleForm.getDate());
 		schedule.setTime(validateTime(scheduleForm.getDate(), scheduleForm.getTime()));
@@ -72,12 +77,54 @@ public class ScheduleService {
 		
 		scheduleRepository.save(schedule);
 		
+		List<String> stringTasks = new ArrayList<>();
+		schedule.getTasks().stream().forEach(t -> stringTasks.add(t.getName()));
+		
+		String stringSchedule = String.format("Agenda: %s"
+											+ " Horário: %s"
+											+ " Cliente: %s"
+											+ " Pet: %s"
+											+ " Serviços: %s"
+											+ " Custo: %s"
+											+ " Observação: %s", schedule.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+																schedule.getTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+																schedule.getCustomer().getName(),
+																schedule.getPet().getName(),
+																stringTasks,
+																schedule.getCost().toString(),
+																schedule.getObservation());
+		
+		logsService.registerLog(authentication, Activity.REGISTRO, stringSchedule);
+		
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
 	
 	@Transactional
-	public ScheduleOutputDto update(ScheduleUpdateForm scheduleUpdate) {
+	public ScheduleOutputDto update(ScheduleUpdateForm scheduleUpdate, Authentication authentication) {
 		Schedule schedule = scheduleRepository.findById(scheduleUpdate.getId()).orElseThrow(() -> new BusinessRulesException("ID da agenda não encontrado."));
+		
+		List<String> stringTasks = new ArrayList<>();
+		schedule.getTasks().stream().forEach(t -> stringTasks.add(t.getName()));
+		
+		String oldSchedule = String.format("Agenda: %s"
+										+ " Horário: %s"
+										+ " Cliente: %s"
+										+ " Pet: %s"
+										+ " Serviços: %s"
+										+ " Custo: %s"
+										+ " Observação: %s"
+										+ " Pagamento: %s"
+										+ " Avisado: %s"
+										+ " Entrege: %s", schedule.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+															schedule.getTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+															schedule.getCustomer().getName(),
+															schedule.getPet().getName(),
+															stringTasks,
+															schedule.getCost().toString(),
+															schedule.getObservation(),
+															schedule.getPayment().toString(),
+															schedule.getAdvised().toString(),
+															schedule.getDelivered().toString());
 		
 		schedule.updateInfo(scheduleUpdate.getDate(),
 							validateTimeSameSchedule(schedule.getId(), scheduleUpdate.getDate(), scheduleUpdate.getTime()),
@@ -92,14 +139,66 @@ public class ScheduleService {
 		
 		scheduleRepository.save(schedule);
 		
+		stringTasks.clear();
+		schedule.getTasks().stream().forEach(t -> stringTasks.add(t.getName()));
+		
+		String newSchedule = String.format("Agenda: %s"
+				+ " Horário: %s"
+				+ " Cliente: %s"
+				+ " Pet: %s"
+				+ " Serviços: %s"
+				+ " Custo: %s"
+				+ " Observação: %s"
+				+ " Pagamento: %s"
+				+ " Avisado: %s"
+				+ " Entrege: %s", schedule.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+									schedule.getTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+									schedule.getCustomer().getName(),
+									schedule.getPet().getName(),
+									stringTasks,
+									schedule.getCost().toString(),
+									schedule.getObservation(),
+									schedule.getPayment().toString(),
+									schedule.getAdvised().toString(),
+									schedule.getDelivered().toString());
+		
+		
+		
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldSchedule+" //PARA// "+newSchedule);
+		
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
 	
 	@Transactional
-	public void delete(String id) {
+	public void delete(String id, Authentication authentication) {
 		Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new BusinessRulesException("Agendamento não encontrado."));
 		
 		scheduleRepository.delete(schedule);
+		
+		List<String> stringTasks = new ArrayList<>();
+		schedule.getTasks().stream().forEach(t -> stringTasks.add(t.getName()));
+		
+		String stringSchedule = String.format("Agenda: %s"
+				+ " Horário: %s"
+				+ " Cliente: %s"
+				+ " Pet: %s"
+				+ " Serviços: %s"
+				+ " Custo: %s"
+				+ " Observação: %s"
+				+ " Pagamento: %s"
+				+ " Avisado: %s"
+				+ " Entrege: %s", schedule.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+									schedule.getTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+									schedule.getCustomer().getName(),
+									schedule.getPet().getName(),
+									stringTasks,
+									schedule.getCost().toString(),
+									schedule.getObservation(),
+									schedule.getPayment().toString(),
+									schedule.getAdvised().toString(),
+									schedule.getDelivered().toString());
+		
+		logsService.registerLog(authentication, Activity.EXCLUSÃO, stringSchedule);
 	}
 	
 	public ScheduleDetailedOutputDto details(String id) {

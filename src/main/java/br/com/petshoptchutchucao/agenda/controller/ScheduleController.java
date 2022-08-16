@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class ScheduleController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ScheduleOutputDto> register(@RequestBody @Valid ScheduleFormDto scheduleForm, UriComponentsBuilder uriBuilder){
-		ScheduleOutputDto scheduleDto = service.register(scheduleForm);
+	public ResponseEntity<ScheduleOutputDto> register(@RequestBody @Valid ScheduleFormDto scheduleForm, UriComponentsBuilder uriBuilder, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		ScheduleOutputDto scheduleDto = service.register(scheduleForm, authentication);
 		
 		URI uri = uriBuilder.path("/schedules/{id}").buildAndExpand(scheduleDto.getId()).toUri();
 		
@@ -47,15 +49,15 @@ public class ScheduleController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<ScheduleOutputDto> update(@RequestBody @Valid ScheduleUpdateForm scheduleUpdate){
-		ScheduleOutputDto scheduleDto = service.update(scheduleUpdate);
+	public ResponseEntity<ScheduleOutputDto> update(@RequestBody @Valid ScheduleUpdateForm scheduleUpdate, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		ScheduleOutputDto scheduleDto = service.update(scheduleUpdate, authentication);
 		
 		return ResponseEntity.ok(scheduleDto);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ScheduleOutputDto> delete(@PathVariable @NotBlank String id){
-		service.delete(id);
+	public ResponseEntity<ScheduleOutputDto> delete(@PathVariable @NotBlank String id, @CurrentSecurityContext(expression = "authentication") Authentication authentication){
+		service.delete(id, authentication);
 		
 		return ResponseEntity.noContent().build();
 	}
