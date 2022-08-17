@@ -1,5 +1,5 @@
 <h1 align="center"> Projeto Agenda Petshop </h1>
-[badges que preciso coloar]
+![badges que preciso coloar]
 
 ## Índice
 
@@ -15,7 +15,7 @@
 * [Contribuições](#contribuicoes)
 * [Conclusão](#conclusao)
 
-## Descição do projeto (#descicao-do-projeto)
+## Descição do projeto
 <p>O projeto visa auxiliar na criação de uma agenda para os banhos, tosas e serviços relacionados de um petshop. Tendo registro de clientes, e os pets dos mesmos para facilitar a atividade dos atendentes do caixa, dessa forma erros são evitados e encontrar o que se precisa mais rápido.</p>
 
 ## Funcionalidades do sistema
