@@ -104,3 +104,22 @@ Para desenhar essas telas e apresentar no escopo eu utilizei o [Figma](https://w
 `Protótipo tela Serviços` ![Serviços](https://user-images.githubusercontent.com/72516703/185236605-50b37ce4-64ba-495b-b6d3-7070f9e72d57.png)
 `Protótipo tela Formulário Serviço`![Serviços - formulário](https://user-images.githubusercontent.com/72516703/185236648-bf29fece-b3fb-41aa-bc69-aeae9446076e.png)
 `Protótipo tela Relatórios`![Fluxo](https://user-images.githubusercontent.com/72516703/185236707-956ad375-c089-48aa-9a7d-2996f7319a38.png)
+
+<a name="telas-finais"></a>
+## Telas Finais
+Ainda em planejamento
+
+<a name="desafios-encontrados"></a>
+## Desafios Encontrados
+Nesta parte comentarei sobre alguns dos desafios que encontrei durante a construção do sistema e uma check lista do que já fiz e o que falta fazer
+- [x] Iniciar o sistema 
+> Pode parecer que não, mas ter iniciado foi realmente difícil e depois as dificuldades só aumentaram conforma a complexidade das atividades foram crescendo
+- [x] Aprender a usar o MongoDB com Java
+> Bancos de dados não relacionais são bem diferentes do que eu esperava, mas aprendi rápid ode alguma forma 
+- [x] Fazer o Spring Security funcionar corretamente
+> Eu tive muito trabalho para fazer isso funcionar corretamente porque a forma de utilizar o Spring Security mudou e depois de muita pesquisa consegui fazer funcionar corretamente junto com o JJWT
+- [ ] Corrigir logs
+- [ ] Enviar e-mail para o usuário criado
+- [ ] Usuário mudar a própria senha
+- [ ] Todo o Front-End
+- [ ] Ajustes finais
