@@ -76,3 +76,31 @@ A agenda possui informações de todas as entidades anteriores, além do dia, e 
 ### Logs
 Os logs foram uma solicitação do cliente para ter controle e informações sobre tudo que os usuários do sistema fazem. Naturalmente usaria-se os *triggers* do banco de dados, mas aparentemente o MongoDB não possuí isso, então fiz a mão todas as atividades necessárias.
 **Ainda precisa de ajustes e ser finalizado**
+
+<a name="tecnologias"></a>
+## Tecnologias Utilizadas
+* Java
+* Spring Boot
+* MongoDB
+* Git & GitHub
+* JUnit
+* JWT
+* ModelMapper
+
+<a name="propototipos-de-telas"></a>
+## Protótipos das Telas
+Para desenhar essas telas e apresentar no escopo eu utilizei o [Figma](https://www.figma.com/) e esse é o protótipo que pretendo usar para me basear e fazer o **Front-End**.
+
+`Protótipo tela de Login`![Tela Petshop - Login](https://user-images.githubusercontent.com/72516703/185235086-ffad6a1d-377b-4202-b603-94ad744d7a31.png)
+`Protótipo de Nova Senha`![Tela Petshop -  Nova Senha](https://user-images.githubusercontent.com/72516703/185235162-fe625e76-95f0-468d-bd36-68414631698f.png)
+`Protótipo de Esqueci a Senha`![Tela Petshop - Esqueci a Senha](https://user-images.githubusercontent.com/72516703/185235215-deec5c6e-a7b8-46d1-abaa-c5ce6055ea0b.png)
+`Protótipo Home`![Home](https://user-images.githubusercontent.com/72516703/185235689-dc3b6795-85d7-4e4e-8bc4-ed1d026611c1.png)
+`Protótipo Agenda Calendário`![Home - Calendário](https://user-images.githubusercontent.com/72516703/185235790-33a202a2-05b2-4cd6-a7ca-1b53dac78ae7.png)
+`Protótipo Agenda Adicionar`![Home - Adicionar](https://user-images.githubusercontent.com/72516703/185235846-88ab7843-a4b0-4382-80b6-4d7e991a102f.png)
+`Protótipo tela Usuários`![Usuários](https://user-images.githubusercontent.com/72516703/185236110-363ec7a4-4009-445a-9682-b2b7fd32c15f.png)
+`Protótipo tela Forumlário Usuário` ![Usuários - formulário](https://user-images.githubusercontent.com/72516703/185236205-b3d31f2d-4251-444a-83d3-c87425ab8050.png)
+`Protótipo tela Clientes`![Clientes](https://user-images.githubusercontent.com/72516703/185236420-206f408e-8032-4b2d-a6da-e243dd65ef3c.png)
+`Protótipo tela Formulário Cliente` ![Clientes - formulário](https://user-images.githubusercontent.com/72516703/185236472-4c57b197-1380-4905-b4d4-5d570eaf1615.png)
+`Protótipo tela Serviços` ![Serviços](https://user-images.githubusercontent.com/72516703/185236605-50b37ce4-64ba-495b-b6d3-7070f9e72d57.png)
+`Protótipo tela Formulário Serviço`![Serviços - formulário](https://user-images.githubusercontent.com/72516703/185236648-bf29fece-b3fb-41aa-bc69-aeae9446076e.png)
+`Protótipo tela Relatórios`![Fluxo](https://user-images.githubusercontent.com/72516703/185236707-956ad375-c089-48aa-9a7d-2996f7319a38.png)
