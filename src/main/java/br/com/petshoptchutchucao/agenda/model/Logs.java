@@ -16,23 +16,26 @@ public class Logs {
 	private LocalDateTime dateTime;
 	private SimplifiedOutputDto user;
 	private Activity activity;
+	private SystemModule module;
 	private String changes;
 	
 	public Logs() {}
 	
-	public Logs(LocalDateTime dateTime, SimplifiedOutputDto user, Activity activity, String changes) {
+	public Logs(LocalDateTime dateTime, SimplifiedOutputDto user, Activity activity, SystemModule module,String changes) {
 		super();
 		this.dateTime = dateTime;
 		this.user = user;
 		this.activity = activity;
+		this.module = module;
 		this.changes = changes;
 	}
 
-	public Logs(String id, LocalDateTime dateTime, SimplifiedOutputDto user, Activity activity, String changes) {
+	public Logs(String id, LocalDateTime dateTime, SimplifiedOutputDto user, Activity activity, SystemModule module,String changes) {
 		Id = id;
 		this.dateTime = dateTime;
 		this.user = user;
 		this.activity = activity;
+		this.module = module;
 		this.changes = changes;
 	}
 
@@ -75,5 +78,11 @@ public class Logs {
 	public void setChanges(String changes) {
 		this.changes = changes;
 	}
-	
+	public SystemModule getModule() {
+		return module;
+	}
+
+	public void setModule(SystemModule module) {
+		this.module = module;
+	}
 }

@@ -19,6 +19,7 @@ import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Activity;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Pet;
+import br.com.petshoptchutchucao.agenda.model.SystemModule;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
 import br.com.petshoptchutchucao.agenda.repository.PetRepository;
 
@@ -54,7 +55,7 @@ public class PetService {
 		customer.addPet(pet.getId(),pet.getName());
 		customerRepository.save(customer);
 		
-		logsService.registerLog(authentication, Activity.REGISTRO, "Pet: " + pet.getName()
+		logsService.registerLog(authentication, Activity.REGISTRO, SystemModule.PETS, "Pet: " + pet.getName()
 																	+" Para o cliente: " + customer.getName());
 		
 		return modelMapper.map(pet, PetOutputDto.class);
@@ -115,7 +116,7 @@ public class PetService {
 								pet.getObservation(),
 								customer.getName());
 		
-		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldPet+" //PARA// "+newPet);
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, SystemModule.PETS, oldPet+" //PARA// "+newPet);
 		
 		return modelMapper.map(pet, PetOutputDto.class);
 	}
@@ -147,7 +148,7 @@ public class PetService {
 								pet.getObservation(),
 								customer.getName());
 		
-		logsService.registerLog(authentication, Activity.EXCLUSÃO, stringPet);
+		logsService.registerLog(authentication, Activity.EXCLUSÃO, SystemModule.PETS, stringPet);
 	}
 	
 	public PetDetailedOutputDto details(String id) {

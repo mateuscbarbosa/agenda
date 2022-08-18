@@ -14,6 +14,7 @@ import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Activity;
+import br.com.petshoptchutchucao.agenda.model.SystemModule;
 import br.com.petshoptchutchucao.agenda.model.Task;
 import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
 
@@ -40,7 +41,7 @@ public class TaskService {
 		
 		taskRepository.save(task);
 		
-		logsService.registerLog(authentication, Activity.REGISTRO, "Serviço: " + task.getName());
+		logsService.registerLog(authentication, Activity.REGISTRO, SystemModule.SERVIÇOS, "Serviço: " + task.getName());
 		
 		return modelMapper.map(task, TaskOutputDto.class);
 	}
@@ -65,7 +66,7 @@ public class TaskService {
 		
 		taskRepository.save(task);
 		
-		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldTask + " //PARA// " + newTask);
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, SystemModule.SERVIÇOS, oldTask + " //PARA// " + newTask);
 		
 		return modelMapper.map(task, TaskOutputDto.class);
 	}
@@ -81,7 +82,7 @@ public class TaskService {
 				+ " Tamanho: %s"
 				+ " Preço: %s", task.getName(), task.getSpicies().toString(), task.getSize().toString(), task.getPrice().toString());
 		
-		logsService.registerLog(authentication, Activity.EXCLUSÃO, stringTask);
+		logsService.registerLog(authentication, Activity.EXCLUSÃO, SystemModule.SERVIÇOS, stringTask);
 	}
 
 	public TaskDetailedOutputDto details(String id) {

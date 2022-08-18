@@ -25,6 +25,7 @@ import br.com.petshoptchutchucao.agenda.infra.PasswordGeneratorPassay;
 import br.com.petshoptchutchucao.agenda.model.Activity;
 import br.com.petshoptchutchucao.agenda.model.Profile;
 import br.com.petshoptchutchucao.agenda.model.Status;
+import br.com.petshoptchutchucao.agenda.model.SystemModule;
 import br.com.petshoptchutchucao.agenda.model.User;
 import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
@@ -67,7 +68,7 @@ public class UserService implements UserDetailsService{
 		}
 		userRepository.save(user);
 		
-		logsService.registerLog(authentication, Activity.REGISTRO, "Novo Usuário: "+user.getName()+" E-mail: "+user.getEmail());
+		logsService.registerLog(authentication, Activity.REGISTRO, SystemModule.USUÁRIOS, "Novo Usuário: "+user.getName()+" E-mail: "+user.getEmail());
 				
 		return modelMapper.map(user, UserOutputDto.class);
 	}
@@ -104,7 +105,7 @@ public class UserService implements UserDetailsService{
 		
 		userRepository.save(user);
 		
-		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldUser + " //PARA// " + newUser);
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, SystemModule.USUÁRIOS, oldUser + " //PARA// " + newUser);
 		
 		return modelMapper.map(user, UserOutputDto.class);
 	}
@@ -117,7 +118,7 @@ public class UserService implements UserDetailsService{
 		
 		userRepository.save(user);
 		
-		logsService.registerLog(authentication, Activity.INATIVAÇÃO, "Usuário: "+user.getName());
+		logsService.registerLog(authentication, Activity.INATIVAÇÃO, SystemModule.USUÁRIOS, "Usuário: "+user.getName());
 	}
 
 	@Transactional

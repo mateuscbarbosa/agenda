@@ -27,6 +27,7 @@ import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
 import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Schedule;
+import br.com.petshoptchutchucao.agenda.model.SystemModule;
 import br.com.petshoptchutchucao.agenda.model.Task;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
 import br.com.petshoptchutchucao.agenda.repository.PetRepository;
@@ -94,7 +95,7 @@ public class ScheduleService {
 																schedule.getCost().toString(),
 																schedule.getObservation());
 		
-		logsService.registerLog(authentication, Activity.REGISTRO, stringSchedule);
+		logsService.registerLog(authentication, Activity.REGISTRO, SystemModule.AGENDAS, stringSchedule);
 		
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
@@ -164,7 +165,7 @@ public class ScheduleService {
 		
 		
 		
-		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldSchedule+" //PARA// "+newSchedule);
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, SystemModule.AGENDAS, oldSchedule+" //PARA// "+newSchedule);
 		
 		return modelMapper.map(schedule, ScheduleOutputDto.class);
 	}
@@ -198,7 +199,7 @@ public class ScheduleService {
 									schedule.getAdvised().toString(),
 									schedule.getDelivered().toString());
 		
-		logsService.registerLog(authentication, Activity.EXCLUSÃO, stringSchedule);
+		logsService.registerLog(authentication, Activity.EXCLUSÃO, SystemModule.AGENDAS, stringSchedule);
 	}
 	
 	public ScheduleDetailedOutputDto details(String id) {

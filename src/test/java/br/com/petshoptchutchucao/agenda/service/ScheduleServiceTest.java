@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
 import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
@@ -61,6 +62,12 @@ class ScheduleServiceTest {
 	@Mock
 	private TaskRepository taskRepository;
 	
+	@Mock
+	private Authentication authentication;
+	
+	@Mock
+	private LogsService logsService;
+	
 	@InjectMocks
 	private ScheduleService service;
 	
@@ -76,14 +83,14 @@ class ScheduleServiceTest {
 	void couldNotRegisterAScheduleOutOfExpedient() {
 		ScheduleFormDto scheduleForm = new ScheduleFormDto(LocalDate.of(2022, 07, 27), LocalTime.of(16, 00), "123456c", "123456p", listTasksString, null);
 		
-		assertThrows(BusinessRulesException.class, () -> service.register(scheduleForm));
+		assertThrows(BusinessRulesException.class, () -> service.register(scheduleForm, authentication));
 	}
 	
 	@Test
 	void couldNotRegisterAScheduleWithWrongMinutes() {
 		ScheduleFormDto scheduleForm = new ScheduleFormDto(LocalDate.of(2022, 07, 27), LocalTime.of(10, 23), "123456c", "123456p", listTasksString, null);
 		
-		assertThrows(BusinessRulesException.class, () -> service.register(scheduleForm));
+		assertThrows(BusinessRulesException.class, () -> service.register(scheduleForm, authentication));
 		assertEquals("Horário informado está fora do intervalo correto.", "Horário informado está fora do intervalo correto.");
 	}
 	//aparentemente seguir nesse estilo de teste retornará sempre a mesma BusinessRulesException por algum motivo ainda desconhecido por mim...
@@ -143,7 +150,7 @@ class ScheduleServiceTest {
 																										ConfirmationStatus.NÃO,
 																										PaymentStatus.PENDENTE));*/
 		
-		ScheduleOutputDto scheduleDto = service.register(scheduleForm);
+		ScheduleOutputDto scheduleDto = service.register(scheduleForm, authentication);
 		
 		Mockito.verify(scheduleRepository).save(Mockito.any());
 		//Ainda não consegui fazer a verificação de respostas, há alguns erros que não entendo
@@ -194,7 +201,7 @@ class ScheduleServiceTest {
 																										ConfirmationStatus.SIM,
 																										PaymentStatus.PAGO));*/
 		
-		ScheduleOutputDto scheduleDto = service.update(scheduleUpdate);
+		ScheduleOutputDto scheduleDto = service.update(scheduleUpdate, authentication);
 		
 		Mockito.verify(scheduleRepository).save(Mockito.any());
 		
@@ -213,7 +220,7 @@ class ScheduleServiceTest {
 		
 		Mockito.when(scheduleRepository.findById(schedule.getId())).thenReturn(Optional.of(schedule));
 		
-		service.delete(schedule.getId());
+		service.delete(schedule.getId(), authentication);
 		
 		Mockito.verify(scheduleRepository).delete(Mockito.any());
 	}

@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 
 import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
 import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
@@ -32,6 +33,12 @@ class TaskServiceTest {
 	@Mock
 	private TaskRepository taskRepository;
 	
+	@Mock
+	private Authentication authentication;
+	
+	@Mock
+	private LogsService logsService;
+	
 	@InjectMocks
 	private TaskService service;
 	
@@ -48,7 +55,7 @@ class TaskServiceTest {
 		
 		Mockito.when(modelMapper.map(task, TaskOutputDto.class)).thenReturn(new TaskOutputDto(null, task.getName(), task.getPrice()));
 		
-		TaskOutputDto taskDto = service.register(taskForm);
+		TaskOutputDto taskDto = service.register(taskForm, authentication);
 		
 		Mockito.verify(taskRepository).save(Mockito.any());
 		
@@ -62,7 +69,7 @@ class TaskServiceTest {
 		
 		Mockito.when(taskRepository.findById(taskUpdate.getId())).thenThrow(BusinessRulesException.class);
 		
-		assertThrows(BusinessRulesException.class,() -> service.update(taskUpdate));
+		assertThrows(BusinessRulesException.class,() -> service.update(taskUpdate, authentication));
 	}
 	
 	@Test
@@ -79,7 +86,7 @@ class TaskServiceTest {
 		
 		Mockito.when(modelMapper.map(task, TaskOutputDto.class)).thenReturn(new TaskOutputDto(task.getId(), task.getName(), task.getPrice()));
 		
-		TaskOutputDto taskDto = service.update(taskUpdate);
+		TaskOutputDto taskDto = service.update(taskUpdate, authentication);
 		
 		Mockito.verify(taskRepository).save(Mockito.any());
 		
@@ -94,7 +101,7 @@ class TaskServiceTest {
 		
 		Mockito.when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 		
-		service.delete(task.getId());
+		service.delete(task.getId(), authentication);
 		
 		Mockito.verify(taskRepository).deleteById(Mockito.any());
 	}

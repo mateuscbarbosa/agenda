@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 
 import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
 import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
@@ -37,6 +38,12 @@ class CustomerServiceTest {
 	@Mock
 	private CustomerRepository customerRepository;
 	
+	@Mock
+	private Authentication authentication;
+	
+	@Mock
+	private LogsService logsService;
+	
 	@InjectMocks
 	private CustomerService service;
 	
@@ -55,7 +62,7 @@ class CustomerServiceTest {
 		
 		Mockito.when(modelMapper.map(customer, CustomerOutputDto.class)).thenReturn(new CustomerOutputDto(null,customer.getName(),customer.getAddress(), customer.getContactNumbers()));
 		
-		CustomerOutputDto customerOutput = service.register(customerForm);
+		CustomerOutputDto customerOutput = service.register(customerForm, authentication);
 		
 		Mockito.verify(customerRepository).save(Mockito.any());
 
@@ -70,7 +77,7 @@ class CustomerServiceTest {
 		
 		Mockito.when(customerRepository.findById(customerUpdate.getId())).thenThrow(BusinessRulesException.class);
 		
-		assertThrows(BusinessRulesException.class, () -> service.update(customerUpdate));
+		assertThrows(BusinessRulesException.class, () -> service.update(customerUpdate, authentication));
 	}
 	
 	@Test
@@ -90,7 +97,7 @@ class CustomerServiceTest {
 																										customer.getAddress(),
 																										customer.getContactNumbers()));
 		
-		CustomerOutputDto customerDto = service.update(customerUpdate);
+		CustomerOutputDto customerDto = service.update(customerUpdate, authentication);
 		
 		Mockito.verify(customerRepository).save(Mockito.any());
 		
@@ -105,7 +112,7 @@ class CustomerServiceTest {
 		
 		Mockito.when(customerRepository.findById(customer.getId())).thenReturn(Optional.of(customer));
 		
-		service.inactivate(customer.getId());
+		service.inactivate(customer.getId(), authentication);
 		
 		Mockito.verify(customerRepository).save(Mockito.any());
 	}

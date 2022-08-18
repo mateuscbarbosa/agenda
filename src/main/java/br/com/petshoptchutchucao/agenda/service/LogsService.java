@@ -15,6 +15,7 @@ import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
 import br.com.petshoptchutchucao.agenda.model.Activity;
 import br.com.petshoptchutchucao.agenda.model.Logs;
+import br.com.petshoptchutchucao.agenda.model.SystemModule;
 import br.com.petshoptchutchucao.agenda.model.User;
 import br.com.petshoptchutchucao.agenda.repository.LogsRepository;
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
@@ -38,8 +39,8 @@ public class LogsService {
 	}
 	
 	@Transactional
-	public void registerLog(Authentication authentication, Activity activity ,String message) {
-		Logs log = new Logs(LocalDateTime.now(),loadCurrentUser(authentication),activity, message);
+	public void registerLog(Authentication authentication, Activity activity, SystemModule module, String message) {
+		Logs log = new Logs(LocalDateTime.now(),loadCurrentUser(authentication),activity, module, message);
 		
 		logsRepository.save(log);
 	}

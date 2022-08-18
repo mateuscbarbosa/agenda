@@ -21,6 +21,7 @@ import br.com.petshoptchutchucao.agenda.model.Activity;
 import br.com.petshoptchutchucao.agenda.model.Customer;
 import br.com.petshoptchutchucao.agenda.model.Pet;
 import br.com.petshoptchutchucao.agenda.model.Status;
+import br.com.petshoptchutchucao.agenda.model.SystemModule;
 import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
 import br.com.petshoptchutchucao.agenda.repository.PetRepository;
 
@@ -52,7 +53,7 @@ public class CustomerService {
 		
 		customerRepository.save(customer);
 		
-		logsService.registerLog(authentication, Activity.REGISTRO, "Cliente: "+customer.getName());
+		logsService.registerLog(authentication, Activity.REGISTRO, SystemModule.CLIENTES, "Cliente: "+customer.getName());
 		
 		return modelMapper.map(customer, CustomerOutputDto.class);
 	}
@@ -78,7 +79,7 @@ public class CustomerService {
 		
 		customerRepository.save(customer);
 		
-		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, oldCustomer + " //PARA// " + newCustomer);
+		logsService.registerLog(authentication, Activity.ATUALIZAÇÃO, SystemModule.CLIENTES, oldCustomer + " //PARA// " + newCustomer);
 		
 		return modelMapper.map(customer, CustomerOutputDto.class);
 	}
@@ -89,7 +90,7 @@ public class CustomerService {
 		
 		customer.setStatus(Status.INATIVO);
 		
-		logsService.registerLog(authentication, Activity.INATIVAÇÃO, "Cliente: " + customer.getName());
+		logsService.registerLog(authentication, Activity.INATIVAÇÃO, SystemModule.CLIENTES, "Cliente: " + customer.getName());
 		
 		customerRepository.save(customer);
 	}

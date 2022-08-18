@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 
 import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
 import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
@@ -38,6 +39,12 @@ class PetServiceTest {
 	@Mock
 	private CustomerRepository customerRepository;
 	
+	@Mock
+	private Authentication authentication;
+	
+	@Mock
+	private LogsService logsService;
+	
 	@InjectMocks
 	private PetService service;
 	
@@ -58,7 +65,7 @@ class PetServiceTest {
 		
 		Mockito.when(customerRepository.findById(petForm.getCustomerId())).thenThrow(BusinessRulesException.class);
 				
-		assertThrows(BusinessRulesException.class, () -> service.register(petForm));
+		assertThrows(BusinessRulesException.class, () -> service.register(petForm, authentication));
 	}
 	
 	@Test
@@ -81,7 +88,7 @@ class PetServiceTest {
 		
 		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getBreed()));
 		
-		PetOutputDto petDto = service.register(petForm);
+		PetOutputDto petDto = service.register(petForm, authentication);
 		
 		Mockito.verify(petRepository).save(Mockito.any());
 		
@@ -112,7 +119,7 @@ class PetServiceTest {
 		
 		Mockito.when(modelMapper.map(pet, PetOutputDto.class)).thenReturn(new PetOutputDto(null, pet.getName(), pet.getSpicies(), pet.getBreed()));
 		
-		PetOutputDto petDto = service.update(petUpdate);
+		PetOutputDto petDto = service.update(petUpdate, authentication);
 		
 		Mockito.verify(petRepository).save(Mockito.any());
 		
@@ -129,7 +136,7 @@ class PetServiceTest {
 		Mockito.when(petRepository.findById(pet.getId())).thenReturn(Optional.of(pet));
 		Mockito.when(customerRepository.findById(pet.getCustomerId())).thenReturn(Optional.of(customer));
 		
-		service.delete(pet.getId());
+		service.delete(pet.getId(), authentication);
 		
 		Mockito.verify(petRepository).delete(Mockito.any());
 		

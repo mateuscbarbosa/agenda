@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.mongodb.MongoException;
@@ -45,6 +46,12 @@ class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
+	
+	@Mock
+	private Authentication authentication;
+	
+	@Mock
+	private LogsService logsService;
 
 	@InjectMocks
 	private UserService service;
@@ -65,7 +72,7 @@ class UserServiceTest {
 		
 		Mockito.when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
 		
-		assertThrows(BusinessRulesException.class, () -> service.register(userForm));
+		assertThrows(BusinessRulesException.class, () -> service.register(userForm, authentication));
 	}
 
 	@Test
@@ -83,7 +90,7 @@ class UserServiceTest {
 		Mockito.when(modelMapper.map(user, UserOutputDto.class))
 				.thenReturn(new UserOutputDto(null, user.getEmail(), user.getName()));
 
-		UserOutputDto userOutput = service.register(userForm);
+		UserOutputDto userOutput = service.register(userForm, authentication);
 
 		Mockito.verify(userRepository).save(Mockito.any());
 
@@ -104,7 +111,7 @@ class UserServiceTest {
 
 		Mockito.when(userRepository.findById(userUpdate.getId())).thenThrow(MongoException.class);
 
-		assertThrows(MongoException.class, () -> service.update(userUpdate));
+		assertThrows(MongoException.class, () -> service.update(userUpdate, authentication));
 	}
 	
 	@Test
@@ -130,9 +137,9 @@ class UserServiceTest {
 		
 		Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 				
-		Mockito.when(service.update(userUpdate)).thenThrow(BusinessRulesException.class);
+		Mockito.when(service.update(userUpdate, authentication)).thenThrow(BusinessRulesException.class);
 		
-		assertThrows(BusinessRulesException.class, () -> service.update(userUpdate));
+		assertThrows(BusinessRulesException.class, () -> service.update(userUpdate, authentication));
 	}
 
 	@Test
@@ -163,7 +170,7 @@ class UserServiceTest {
 																				user.getEmail(),
 																				user.getName()));
 		
-		UserOutputDto userDto = service.update(userUpdate);
+		UserOutputDto userDto = service.update(userUpdate, authentication);
 		
 		Mockito.verify(userRepository).save(Mockito.any());
 		
@@ -182,7 +189,8 @@ class UserServiceTest {
 		
 		Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 		
-		service.inactivate(user.getId());
+		
+		service.inactivate(user.getId(), authentication);
 		
 		Mockito.verify(userRepository).save(Mockito.any());
 	}
