@@ -1,5 +1,7 @@
 <h1 align="center"> Projeto Agenda Petshop </h1>
-![badges que preciso colocar]
+
+![Badge Status Geral](https://img.shields.io/badge/Status%20Geral-Em%20Desenvolvimento-blue?style=for-the-badge) ![Status Back-End](https://img.shields.io/badge/Back--End-Em%20Desenvolvimento-yellowgreen?style=for-the-badge) ![Status Front-End](https://img.shields.io/badge/Front--End-Em%20An%C3%A1lise-critical?style=for-the-badge) ![Previsão de término](https://img.shields.io/badge/Previs%C3%A3o%20de%20T%C3%A9rmino-Setembro-informational?style=for-the-badge)
+
 O projeto visa auxiliar na criação de uma agenda para os banhos, tosas e serviços relacionados de um petshop. Tendo registro de clientes, e os pets dos mesmos para facilitar a atividade dos atendentes do caixa, dessa forma erros são evitados e encontrar o que se precisa mais rápido.
 
 <a name="indice"></a>
@@ -123,3 +125,16 @@ Nesta parte comentarei sobre alguns dos desafios que encontrei durante a constru
 - [ ] Usuário mudar a própria senha
 - [ ] Todo o Front-End
 - [ ] Ajustes finais
+
+<a name="contribuicoes"></a>
+## Contribuições
+Alura e o bootcamp de Java 2021
+Os muitos sites com tutorias
+Documentações (principalmente MongoDB e JJWT)
+
+<a name="conclusao"></a>
+## Conclusão
+Pretendo terminar o projeto em Setembro, o quanto antes e disponibilizá-lo via Docker;
+O aprendizado até o momento tem sido satisfatório e divertido, apesar dos bugs e problemas encontrados pelo caminho, o sistema está fluindo.
+Usando o Postman para fazer as verificações e teste manuais, por mais trabalhoso que tem sido, é incrível ver tudo funcionando corretamente.
+Espero usar o conhecimento adquirido para me aprimorar e desenvolver sistemas ainda mais completos e complexos.
