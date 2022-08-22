@@ -16,7 +16,6 @@ public interface LogsRepository extends MongoRepository<Logs, String> {
 	Integer countByDateTime(LocalDateTime dateTime);
 	
 	@Query(value = "{'dateTime': {'$lt' : ?0 }}", delete = true)
-	//({birth: {$lt: new Date(ISODate("2010-08-16T00:00:00.000Z").getTime()-1000*86400*2)}})
 	void cleanMonthLogs(LocalDateTime dateTime);
 
 }
