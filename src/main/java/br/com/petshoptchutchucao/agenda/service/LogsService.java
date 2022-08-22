@@ -44,6 +44,16 @@ public class LogsService {
 		
 		logsRepository.save(log);
 	}
+
+	@Transactional
+	public void cleanLogs(LocalDateTime dateTime) {
+		LocalDateTime thirtyDaysBefore = dateTime.minusMonths(1);
+		
+		if(logsRepository.existsByDateTime(thirtyDaysBefore)) {
+			//Integer registredLogs = logsRepository.countByDateTime(thirtyDaysBefore); MENSAGEM DE QUANTOS LOGS SERÃO APAGADOS
+			logsRepository.cleanMonthLogs(dateTime);
+		}
+	}
 	
 	private SimplifiedOutputDto loadCurrentUser(Authentication authentication) {
 		User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new BusinessRulesException("Usuário inválido para esta operação"));

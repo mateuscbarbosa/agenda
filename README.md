@@ -121,6 +121,7 @@ Nesta parte comentarei sobre alguns dos desafios que encontrei durante a constru
 - [x] Fazer o Spring Security funcionar corretamente
 > Eu tive muito trabalho para fazer isso funcionar corretamente porque a forma de utilizar o Spring Security mudou e depois de muita pesquisa consegui fazer funcionar corretamente junto com o JJWT
 - [ ] Corrigir logs
+> Configurar uma confirmação de exclusão de logs
 - [ ] Enviar e-mail para o usuário criado
 - [ ] Usuário mudar a própria senha
 - [ ] Todo o Front-End
