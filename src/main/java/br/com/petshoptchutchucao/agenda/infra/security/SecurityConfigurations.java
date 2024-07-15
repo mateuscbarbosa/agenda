@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import br.com.petshoptchutchucao.agenda.repository.UserRepository;
 
@@ -60,6 +61,13 @@ public class SecurityConfigurations {
 					.and().addFilterBefore(new TokenFilterVerification(tokenService, userRepository), UsernamePasswordAuthenticationFilter.class);
 		
 		return httpSecurity.build();
+	}
+	
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+			.allowedOrigins("localhost:4200")
+			.allowedMethods("GET", "POST", "PUT", "DELETE")
+			.allowedHeaders("*");
 	}
 	
 }
