@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.petshoptchutchucao.agenda.dto.LogsOutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.LogsOutputDto;
 import br.com.petshoptchutchucao.agenda.service.LogsService;
 
 @RestController

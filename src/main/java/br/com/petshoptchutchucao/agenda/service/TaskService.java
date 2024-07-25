@@ -8,15 +8,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.petshoptchutchucao.agenda.dto.TaskDetailedOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.TaskDetailedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.TaskFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.TaskOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.TaskUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Activity;
-import br.com.petshoptchutchucao.agenda.model.SystemModule;
-import br.com.petshoptchutchucao.agenda.model.Task;
-import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.Activity;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.SystemModule;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Task;
+import br.com.petshoptchutchucao.agenda.model.repository.TaskRepository;
 
 @Service
 public class TaskService {

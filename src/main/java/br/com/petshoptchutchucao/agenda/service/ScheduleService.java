@@ -15,24 +15,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.petshoptchutchucao.agenda.dto.ScheduleDetailedOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
-import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.ScheduleDetailedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.ScheduleFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.ScheduleOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.ScheduleUpdateForm;
+import br.com.petshoptchutchucao.agenda.model.response.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Activity;
-import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
-import br.com.petshoptchutchucao.agenda.model.Pet;
-import br.com.petshoptchutchucao.agenda.model.Schedule;
-import br.com.petshoptchutchucao.agenda.model.SystemModule;
-import br.com.petshoptchutchucao.agenda.model.Task;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
-import br.com.petshoptchutchucao.agenda.repository.PetRepository;
-import br.com.petshoptchutchucao.agenda.repository.ScheduleRepository;
-import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.Activity;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.ConfirmationStatus;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.PaymentStatus;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Pet;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Schedule;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.SystemModule;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Task;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.PetRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.ScheduleRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.TaskRepository;
 
 @Service
 public class ScheduleService {

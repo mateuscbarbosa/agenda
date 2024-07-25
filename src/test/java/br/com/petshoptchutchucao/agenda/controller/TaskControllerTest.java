@@ -22,18 +22,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.TaskFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.TaskUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
-import br.com.petshoptchutchucao.agenda.model.Profile;
-import br.com.petshoptchutchucao.agenda.model.Size;
-import br.com.petshoptchutchucao.agenda.model.Spicies;
-import br.com.petshoptchutchucao.agenda.model.Status;
-import br.com.petshoptchutchucao.agenda.model.Task;
-import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
-import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
-import br.com.petshoptchutchucao.agenda.repository.UserRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Profile;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Size;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Species;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Status;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Task;
+import br.com.petshoptchutchucao.agenda.model.entities.user.User;
+import br.com.petshoptchutchucao.agenda.model.repository.ProfileRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -114,7 +114,7 @@ class TaskControllerTest {
 	
 	@Test
 	void couldRegisterATaskWithCompletData() throws Exception {
-		TaskFormDto taskForm = new TaskFormDto("Serviço Teste", Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
+		TaskFormDto taskForm = new TaskFormDto("Serviço Teste", Species.CACHORRO, Size.MÉDIO, new BigDecimal(100));
 		
 		String json = objectMapper.writeValueAsString(taskForm);
 		String jsonWanted = "{\"name\":\"SERVIÇO TESTE\",\"price\":100}";
@@ -130,7 +130,7 @@ class TaskControllerTest {
 	
 	@Test
 	void couldNotUpdateATaskWithWrongId() throws Exception {
-		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto("123456", "Serviço Teste", Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
+		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto("123456", "Serviço Teste", Species.CACHORRO, Size.MÉDIO, new BigDecimal(100));
 		
 		String json = objectMapper.writeValueAsString(taskUpdate);
 		
@@ -146,7 +146,7 @@ class TaskControllerTest {
 	void couldUpdateATaskWithCorrectId() throws Exception{
 		Task task = createTaskInBD("Serviçoo Teste");
 		
-		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto(task.getId(), task.getName(), Spicies.GATO, Size.PELO_CURTO, new BigDecimal(120));
+		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto(task.getId(), task.getName(), Species.GATO, Size.PELO_CURTO, new BigDecimal(120));
 		
 		String json = objectMapper.writeValueAsString(taskUpdate);
 		String jsonWanted = "{\"name\":\"SERVIÇOO TESTE\",\"price\":120}";
@@ -171,7 +171,7 @@ class TaskControllerTest {
 	}
 
 	private Task createTaskInBD(String name) {
-		Task task = new Task(name, Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
+		Task task = new Task(name, Species.CACHORRO, Size.MÉDIO, new BigDecimal(100));
 		
 		taskRepository.save(task);
 		

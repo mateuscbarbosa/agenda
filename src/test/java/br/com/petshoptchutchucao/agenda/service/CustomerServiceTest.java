@@ -18,13 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 
-import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
-import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.CustomerFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.CustomerOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.CustomerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.Status;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Status;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

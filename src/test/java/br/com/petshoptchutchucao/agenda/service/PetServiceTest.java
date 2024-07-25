@@ -15,17 +15,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 
-import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
-import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.PetFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.PetOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.Gender;
-import br.com.petshoptchutchucao.agenda.model.Pet;
-import br.com.petshoptchutchucao.agenda.model.Size;
-import br.com.petshoptchutchucao.agenda.model.Spicies;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
-import br.com.petshoptchutchucao.agenda.repository.PetRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Gender;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Pet;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Size;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Species;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.PetRepository;
 
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
@@ -50,7 +50,7 @@ class PetServiceTest {
 	
 	@Test
 	void couldNotRegisterAPetWithIncorrectCustomerId() {
-		PetFormDto petForm = new PetFormDto("Bicho Teste", Spicies.GATO, Gender.FÊMEA, "Vira Lata", LocalDate.now(), Size.PELO_CURTO, null, "123456");
+		PetFormDto petForm = new PetFormDto("Bicho Teste", Species.GATO, Gender.FÊMEA, "Vira Lata", LocalDate.now(), Size.PELO_CURTO, null, "123456");
 		
 		Pet pet = new Pet(petForm.getName(),
 						petForm.getSpicies(),
@@ -70,7 +70,7 @@ class PetServiceTest {
 	
 	@Test
 	void couldRegisterAPetWithCorrectCustomerId() {
-		PetFormDto petForm = new PetFormDto("Bicho Teste", Spicies.GATO, Gender.FÊMEA, "Vira Lata", LocalDate.now(), Size.PELO_CURTO, null, "123456");
+		PetFormDto petForm = new PetFormDto("Bicho Teste", Species.GATO, Gender.FÊMEA, "Vira Lata", LocalDate.now(), Size.PELO_CURTO, null, "123456");
 		Customer customer = new Customer();
 		
 		Pet pet = new Pet(petForm.getName(),
@@ -100,7 +100,7 @@ class PetServiceTest {
 	
 	@Test
 	void couldUpdateAPetWithCorrectId() {
-		PetUpdateFormDto petUpdate = new PetUpdateFormDto("123456", "Bicho Teste", Spicies.GATO, Gender.FÊMEA, "Vira lata", LocalDate.now(), Size.PELO_CURTO, null, "123456u");
+		PetUpdateFormDto petUpdate = new PetUpdateFormDto("123456", "Bicho Teste", Species.GATO, Gender.FÊMEA, "Vira lata", LocalDate.now(), Size.PELO_CURTO, null, "123456u");
 		Customer customer = new Customer();
 		
 		Pet pet = new Pet(petUpdate.getId(),
@@ -130,7 +130,7 @@ class PetServiceTest {
 
 	@Test
 	void couldDeleteAPetWithCorrectId() {
-		Pet pet = new Pet("123456", "Bicho Teste", Spicies.GATO, Gender.FÊMEA, "Vira lata", LocalDate.now(), Size.PELO_CURTO, null, "123456u");
+		Pet pet = new Pet("123456", "Bicho Teste", Species.GATO, Gender.FÊMEA, "Vira lata", LocalDate.now(), Size.PELO_CURTO, null, "123456u");
 		Customer customer = new Customer();
 		
 		Mockito.when(petRepository.findById(pet.getId())).thenReturn(Optional.of(pet));

@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import br.com.petshoptchutchucao.agenda.dto.LoginFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.LoginFormDto;
 
 @Service
 public class AuthenticationService{

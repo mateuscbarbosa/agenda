@@ -21,16 +21,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
-import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.CustomerFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.CustomerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.Profile;
-import br.com.petshoptchutchucao.agenda.model.Status;
-import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
-import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
-import br.com.petshoptchutchucao.agenda.repository.UserRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Profile;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Status;
+import br.com.petshoptchutchucao.agenda.model.entities.user.User;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.ProfileRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

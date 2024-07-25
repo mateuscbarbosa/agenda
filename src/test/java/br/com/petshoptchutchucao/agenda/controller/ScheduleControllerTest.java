@@ -24,28 +24,28 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
-import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.ScheduleFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.ScheduleUpdateForm;
+import br.com.petshoptchutchucao.agenda.model.response.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
-import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.Gender;
-import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
-import br.com.petshoptchutchucao.agenda.model.Pet;
-import br.com.petshoptchutchucao.agenda.model.Profile;
-import br.com.petshoptchutchucao.agenda.model.Schedule;
-import br.com.petshoptchutchucao.agenda.model.Size;
-import br.com.petshoptchutchucao.agenda.model.Spicies;
-import br.com.petshoptchutchucao.agenda.model.Status;
-import br.com.petshoptchutchucao.agenda.model.Task;
-import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
-import br.com.petshoptchutchucao.agenda.repository.PetRepository;
-import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
-import br.com.petshoptchutchucao.agenda.repository.ScheduleRepository;
-import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
-import br.com.petshoptchutchucao.agenda.repository.UserRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.ConfirmationStatus;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Gender;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.PaymentStatus;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Pet;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Profile;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Schedule;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Size;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Species;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Status;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Task;
+import br.com.petshoptchutchucao.agenda.model.entities.user.User;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.PetRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.ProfileRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.ScheduleRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -103,11 +103,11 @@ class ScheduleControllerTest {
 	void createCustomerPetTaskInBD() {
 		Customer customer = new Customer("Cliente Teste", "Rua Teste", null, Status.ATIVO);
 		this.customer = customerRepository.save(customer);
-		Pet pet = new Pet("Pet Teste", Spicies.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null,this.customer.getId());
+		Pet pet = new Pet("Pet Teste", Species.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null,this.customer.getId());
 		this.pet = petRepository.save(pet);
 		customer.addPet(this.pet.getId(), this.pet.getName());
 		this.customer = customerRepository.save(customer);
-		Task task = new Task("Teste", Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100.3));
+		Task task = new Task("Teste", Species.CACHORRO, Size.MÉDIO, new BigDecimal(100.3));
 		this.task = taskRepository.save(task);
 		listTasksString.add(this.task.getId());
 	}
@@ -304,7 +304,7 @@ class ScheduleControllerTest {
 	
 	@Test
 	void couldNotRegisterAScheduleWithWrongTypeOfTask() throws Exception {
-		Task task = new Task("Teste", Spicies.CACHORRO, Size.GRANDE, new BigDecimal(120.3));
+		Task task = new Task("Teste", Species.CACHORRO, Size.GRANDE, new BigDecimal(120.3));
 		Task registred = taskRepository.save(task);
 		listTasksString.add(registred.getId());
 		

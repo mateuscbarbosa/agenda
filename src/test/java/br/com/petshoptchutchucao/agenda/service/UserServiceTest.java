@@ -19,15 +19,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.mongodb.MongoException;
 
-import br.com.petshoptchutchucao.agenda.dto.UserFormDto;
-import br.com.petshoptchutchucao.agenda.dto.UserOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.UserUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.UserFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.UserOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.UserUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Profile;
-import br.com.petshoptchutchucao.agenda.model.Status;
-import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
-import br.com.petshoptchutchucao.agenda.repository.UserRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Profile;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Status;
+import br.com.petshoptchutchucao.agenda.model.entities.user.User;
+import br.com.petshoptchutchucao.agenda.model.repository.ProfileRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {

@@ -10,15 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.petshoptchutchucao.agenda.dto.LogsOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.LogsOutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.SimplifiedOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Activity;
-import br.com.petshoptchutchucao.agenda.model.Logs;
-import br.com.petshoptchutchucao.agenda.model.SystemModule;
-import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.LogsRepository;
-import br.com.petshoptchutchucao.agenda.repository.UserRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.Activity;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.Logs;
+import br.com.petshoptchutchucao.agenda.model.entities.logs.SystemModule;
+import br.com.petshoptchutchucao.agenda.model.entities.user.User;
+import br.com.petshoptchutchucao.agenda.model.repository.LogsRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.UserRepository;
 
 @Service
 public class LogsService {

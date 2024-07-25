@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.petshoptchutchucao.agenda.dto.CustomerDetailedOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.CustomerFormDto;
-import br.com.petshoptchutchucao.agenda.dto.CustomerOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.CustomerUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.CustomerDetailedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.CustomerFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.CustomerOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.CustomerUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.service.CustomerService;
 
 @RestController

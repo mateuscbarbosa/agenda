@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.petshoptchutchucao.agenda.dto.LoginFormDto;
-import br.com.petshoptchutchucao.agenda.dto.TokenOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.LoginFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.TokenOutputDto;
 
 @RestController
 @RequestMapping("/auth")

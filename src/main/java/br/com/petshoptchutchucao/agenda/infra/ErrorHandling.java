@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import br.com.petshoptchutchucao.agenda.dto.Error400OutputDto;
-import br.com.petshoptchutchucao.agenda.dto.Error500OutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.Error400OutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.Error500OutputDto;
 
 @RestControllerAdvice
 public class ErrorHandling {

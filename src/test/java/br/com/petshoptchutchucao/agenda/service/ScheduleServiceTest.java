@@ -18,30 +18,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 
-import br.com.petshoptchutchucao.agenda.dto.PetOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleFormDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.ScheduleUpdateForm;
-import br.com.petshoptchutchucao.agenda.dto.SimplifiedOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.PetOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.ScheduleFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.ScheduleOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.ScheduleUpdateForm;
+import br.com.petshoptchutchucao.agenda.model.response.SimplifiedOutputDto;
+import br.com.petshoptchutchucao.agenda.model.response.TaskOutputDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.ConfirmationStatus;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.PaymentStatus;
-import br.com.petshoptchutchucao.agenda.model.Pet;
-import br.com.petshoptchutchucao.agenda.model.Schedule;
-import br.com.petshoptchutchucao.agenda.model.Size;
-import br.com.petshoptchutchucao.agenda.model.Spicies;
-import br.com.petshoptchutchucao.agenda.model.Task;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
-import br.com.petshoptchutchucao.agenda.repository.PetRepository;
-import br.com.petshoptchutchucao.agenda.repository.ScheduleRepository;
-import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.ConfirmationStatus;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.PaymentStatus;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Pet;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Schedule;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Size;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Species;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Task;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.PetRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.ScheduleRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.TaskRepository;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -105,11 +103,11 @@ class ScheduleServiceTest {
 		Pet pet = new Pet();
 		pet.setId(scheduleForm.getPetId());
 		pet.setCustomerId(customer.getId());
-		pet.setSpicies(Spicies.CACHORRO);
+		pet.setSpicies(Species.CACHORRO);
 		pet.setSize(Size.GRANDE);
 		Task task = new Task();
 		task.setId(listTasksString.get(0));
-		task.setSpicies(Spicies.CACHORRO);
+		task.setSpicies(Species.CACHORRO);
 		task.setSize(Size.GRANDE);
 		task.setPrice(new BigDecimal(10));
 		tasks.add(task);
@@ -165,11 +163,11 @@ class ScheduleServiceTest {
 		pet.setId("123456p");
 		pet.setCustomerId(customer.getId());
 		pet.setSize(Size.MÉDIO);
-		pet.setSpicies(Spicies.CACHORRO);
+		pet.setSpicies(Species.CACHORRO);
 		Task task = new Task();
 		task.setId("123456t");
 		task.setSize(Size.MÉDIO);
-		task.setSpicies(Spicies.CACHORRO);
+		task.setSpicies(Species.CACHORRO);
 		task.setPrice(new BigDecimal(10));
 		
 		List<TaskOutputDto> tasksOutput = new ArrayList<>();

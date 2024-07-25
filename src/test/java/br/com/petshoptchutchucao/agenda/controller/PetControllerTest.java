@@ -22,21 +22,21 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.petshoptchutchucao.agenda.dto.PetFormDto;
-import br.com.petshoptchutchucao.agenda.dto.PetUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.PetFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.PetUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.security.TokenService;
-import br.com.petshoptchutchucao.agenda.model.Customer;
-import br.com.petshoptchutchucao.agenda.model.Gender;
-import br.com.petshoptchutchucao.agenda.model.Pet;
-import br.com.petshoptchutchucao.agenda.model.Profile;
-import br.com.petshoptchutchucao.agenda.model.Size;
-import br.com.petshoptchutchucao.agenda.model.Spicies;
-import br.com.petshoptchutchucao.agenda.model.Status;
-import br.com.petshoptchutchucao.agenda.model.User;
-import br.com.petshoptchutchucao.agenda.repository.CustomerRepository;
-import br.com.petshoptchutchucao.agenda.repository.PetRepository;
-import br.com.petshoptchutchucao.agenda.repository.ProfileRepository;
-import br.com.petshoptchutchucao.agenda.repository.UserRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Customer;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Gender;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Pet;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Profile;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Size;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Species;
+import br.com.petshoptchutchucao.agenda.model.entities.user.Status;
+import br.com.petshoptchutchucao.agenda.model.entities.user.User;
+import br.com.petshoptchutchucao.agenda.model.repository.CustomerRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.PetRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.ProfileRepository;
+import br.com.petshoptchutchucao.agenda.model.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -118,7 +118,7 @@ class PetControllerTest {
 	@Test
 	void couldNotRegisterAPetWithWrongCustomerId() throws Exception {
 		PetFormDto petForm = new PetFormDto("Pet Teste",
-											Spicies.CACHORRO,
+											Species.CACHORRO,
 											Gender.MACHO,
 											"Pastor Alemão",
 											LocalDate.now(),
@@ -142,7 +142,7 @@ class PetControllerTest {
 		Customer customer = createCustomerInBD("Cliente1 Teste");
 		
 		PetFormDto petForm = new PetFormDto("Pet Teste",
-											Spicies.CACHORRO,
+											Species.CACHORRO,
 											Gender.MACHO,
 											"Pastor Alemão",
 											LocalDate.now(),
@@ -167,7 +167,7 @@ class PetControllerTest {
 	void couldNotUpdateAPetWithWrongId() throws Exception {
 		PetUpdateFormDto petUpdate = new PetUpdateFormDto("123456",
 														"Pet Teste",
-														Spicies.CACHORRO,
+														Species.CACHORRO,
 														Gender.MACHO,
 														"Vira Lata",
 														LocalDate.now(),
@@ -233,7 +233,7 @@ class PetControllerTest {
 	}
 	
 	private Pet createPetInBD(String petName, String customerName) {
-		Pet pet = new Pet(petName, Spicies.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null, createCustomerInBD(customerName).getId());
+		Pet pet = new Pet(petName, Species.CACHORRO, Gender.MACHO, "Vira Lata", LocalDate.now(), Size.MÉDIO, null, createCustomerInBD(customerName).getId());
 		
 		petRepository.save(pet);
 		

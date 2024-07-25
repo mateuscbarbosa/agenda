@@ -15,14 +15,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 
-import br.com.petshoptchutchucao.agenda.dto.TaskFormDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskOutputDto;
-import br.com.petshoptchutchucao.agenda.dto.TaskUpdateFormDto;
+import br.com.petshoptchutchucao.agenda.model.request.TaskFormDto;
+import br.com.petshoptchutchucao.agenda.model.response.TaskOutputDto;
+import br.com.petshoptchutchucao.agenda.model.request.TaskUpdateFormDto;
 import br.com.petshoptchutchucao.agenda.infra.BusinessRulesException;
-import br.com.petshoptchutchucao.agenda.model.Size;
-import br.com.petshoptchutchucao.agenda.model.Spicies;
-import br.com.petshoptchutchucao.agenda.model.Task;
-import br.com.petshoptchutchucao.agenda.repository.TaskRepository;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Size;
+import br.com.petshoptchutchucao.agenda.model.entities.customer.Species;
+import br.com.petshoptchutchucao.agenda.model.entities.schedule.Task;
+import br.com.petshoptchutchucao.agenda.model.repository.TaskRepository;
 
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
@@ -44,7 +44,7 @@ class TaskServiceTest {
 	
 	@Test
 	void couldRegisterATask() {
-		TaskFormDto taskForm = new TaskFormDto("Serviço Teste", Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
+		TaskFormDto taskForm = new TaskFormDto("Serviço Teste", Species.CACHORRO, Size.MÉDIO, new BigDecimal(100));
 		
 		Task task = new Task(taskForm.getName(),
 							taskForm.getSpicies(),
@@ -65,7 +65,7 @@ class TaskServiceTest {
 	
 	@Test
 	void couldNotUpdateATaskWithIncorrectId() {
-		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto("123456", "Serviço Teste", Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
+		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto("123456", "Serviço Teste", Species.CACHORRO, Size.MÉDIO, new BigDecimal(100));
 		
 		Mockito.when(taskRepository.findById(taskUpdate.getId())).thenThrow(BusinessRulesException.class);
 		
@@ -74,7 +74,7 @@ class TaskServiceTest {
 	
 	@Test
 	void couldUpdateATaskWithCorrectId() {
-		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto("123456", "Serviço Teste", Spicies.CACHORRO, Size.MÉDIO, new BigDecimal(100));
+		TaskUpdateFormDto taskUpdate = new TaskUpdateFormDto("123456", "Serviço Teste", Species.CACHORRO, Size.MÉDIO, new BigDecimal(100));
 		
 		Task task = new Task(taskUpdate.getId(),
 							taskUpdate.getName(),
@@ -97,7 +97,7 @@ class TaskServiceTest {
 	
 	@Test
 	void couldDeleteATaskWithCorrectId() {
-		Task task = new Task("123465", "Serviço Teste", Spicies.CACHORRO, Size.GIGANTE, new BigDecimal(100));
+		Task task = new Task("123465", "Serviço Teste", Species.CACHORRO, Size.GIGANTE, new BigDecimal(100));
 		
 		Mockito.when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 		
